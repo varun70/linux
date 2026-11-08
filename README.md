@@ -2,7 +2,7 @@
 
 A beginner-to-advanced Linux command reference that explains **what each command does, how to use it, and where to use it** in real sysadmin, DevOps and SOC work.
 
-**Live site:** `https://YOUR-USERNAME.github.io/linux-command-guide/`
+**Live site:** `https://varun70.github.io/linux-command-guide/`
 
 No build step. No dependencies. The whole site is one `index.html` file.
 
