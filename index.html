@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Linux command guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Martian+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F7; --panel:#FFFFFF; --ink:#162033; --muted:#4F5B72; --line:#D3DAE4;
+  --accent:#0B6B8A; --accent-ink:#FFFFFF; --code:#E8EEF4;
+  --warn:#7A4700; --warnbg:#FFEFD2; --bad:#9E1D16; --badbg:#FDE3E0; --ok:#17653F; --okbg:#DDF3E7;
+  --t0:#0B6B8A; --t0i:#FFFFFF; --t0b:#D7ECF3;
+  --t1:#B45F06; --t1i:#FFFFFF; --t1b:#FBE5CC;
+  --t2:#6B4EAA; --t2i:#FFFFFF; --t2b:#E6DEF5;
+  --t3:#B8324A; --t3i:#FFFFFF; --t3b:#F7DCE1;
+  --sans:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --mono:'Martian Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,'Liberation Mono',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1520; --panel:#162030; --ink:#E6ECF5; --muted:#9DABC2; --line:#2A384D;
+    --accent:#5CC0E0; --accent-ink:#06202B; --code:#0B111A;
+    --warn:#F4C26B; --warnbg:#3A2A0C; --bad:#FF9F96; --badbg:#411613; --ok:#7FD8A4; --okbg:#12331F;
+    --t0:#5CC0E0; --t0i:#06202B; --t0b:#17323D;
+    --t1:#F2B35E; --t1i:#2B1700; --t1b:#3A2A15;
+    --t2:#B9A2F2; --t2i:#1D1038; --t2b:#2A2340;
+    --t3:#F59AAE; --t3i:#38101B; --t3b:#3D1E27;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1520; --panel:#162030; --ink:#E6ECF5; --muted:#9DABC2; --line:#2A384D;
+  --accent:#5CC0E0; --accent-ink:#06202B; --code:#0B111A;
+  --warn:#F4C26B; --warnbg:#3A2A0C; --bad:#FF9F96; --badbg:#411613; --ok:#7FD8A4; --okbg:#12331F;
+  --t0:#5CC0E0; --t0i:#06202B; --t0b:#17323D;
+  --t1:#F2B35E; --t1i:#2B1700; --t1b:#3A2A15;
+  --t2:#B9A2F2; --t2i:#1D1038; --t2b:#2A2340;
+  --t3:#F59AAE; --t3i:#38101B; --t3b:#3D1E27;
+  color-scheme:dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+code,pre{font-family:var(--mono);font-size:.82rem}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px;padding:18px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+.cursor{display:inline-block;width:.55em;height:1.1em;background:var(--accent);border-radius:2px}
+.nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}
+.nav a{padding:7px 13px;border-radius:999px;text-decoration:none;color:var(--muted);font-weight:600;font-size:.95rem}
+.nav a:hover{color:var(--ink);background:var(--code)}
+.nav a[aria-current="page"]{background:var(--accent);color:var(--accent-ink)}
+.theme{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 13px;cursor:pointer;font-size:.9rem;font-weight:600}
+
+/* hero */
+.hero{padding:28px 0 8px}
+.hero h1{font-size:clamp(2.1rem,5.2vw,3.7rem);line-height:1.04;font-weight:800;letter-spacing:-.03em;margin:0 0 14px;max-width:16ch}
+.hero .lede{max-width:62ch;color:var(--muted);font-size:1.08rem;margin:0 0 26px}
+.explain{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px 18px}
+.explain h2{margin:0 0 2px;font-size:1.1rem;letter-spacing:-.01em}
+.explain .hint{margin:0 0 14px;color:var(--muted);font-size:.93rem}
+.samples{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.samples button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:5px 12px;cursor:pointer;font-size:.88rem;font-weight:600}
+.samples button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.toks{display:flex;flex-wrap:wrap;gap:8px 8px;font-family:var(--mono)}
+.tok{font-family:var(--mono);font-size:clamp(.9rem,2.4vw,1.2rem);border:0;border-bottom:3px solid var(--c);background:var(--cb);color:var(--ink);padding:6px 9px;border-radius:7px 7px 0 0;cursor:pointer}
+.tok:hover{filter:brightness(.97)}
+.tok[aria-pressed="true"]{background:var(--c);color:var(--ci)}
+.tok.t0{--c:var(--t0);--ci:var(--t0i);--cb:var(--t0b)}
+.tok.t1{--c:var(--t1);--ci:var(--t1i);--cb:var(--t1b)}
+.tok.t2{--c:var(--t2);--ci:var(--t2i);--cb:var(--t2b)}
+.tok.t3{--c:var(--t3);--ci:var(--t3i);--cb:var(--t3b)}
+.say{margin:16px 0 0;min-height:3.4em;max-width:72ch}
+.say code{background:var(--code);padding:2px 6px;border-radius:5px}
+
+/* layout */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;padding:30px 0 40px;align-items:start}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);max-height:calc(100vh - 32px);overflow:auto}
+.prog{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:.9rem}
+.prog progress{width:100%;height:8px;margin-top:8px;accent-color:var(--accent)}
+.cats{display:flex;flex-direction:column;gap:2px}
+.cats button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:0;background:transparent;border-radius:8px;padding:7px 10px;cursor:pointer;font-size:.94rem}
+.cats button:hover{background:var(--code)}
+.cats button[aria-pressed="true"]{background:var(--ink);color:var(--bg);font-weight:700}
+.cats .n{color:var(--muted);font-variant-numeric:tabular-nums}
+.cats button[aria-pressed="true"] .n{color:inherit;opacity:.8}
+
+.search{display:block;width:100%;font:inherit;font-size:1.05rem;padding:13px 16px;border:1.5px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink)}
+.search:focus-visible{border-color:var(--accent);outline-offset:1px}
+.filters{display:flex;flex-wrap:wrap;gap:10px 22px;margin:14px 0 6px}
+.fg{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.fg .fl{font-size:.88rem;color:var(--muted);margin-right:4px;font-weight:600}
+.fg button{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:4px 11px;cursor:pointer;font-size:.86rem}
+.fg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.count{color:var(--muted);font-size:.9rem;margin:10px 0 6px}
+.group h2{font-size:1.2rem;letter-spacing:-.01em;margin:26px 0 8px;display:flex;align-items:baseline;gap:10px}
+.group h2 span{font-size:.88rem;color:var(--muted);font-weight:500}
+details.row{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:7px 0}
+details.row:hover{border-color:var(--accent)}
+details.row[open]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+details.row summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:6px 14px;align-items:center;padding:11px 16px 11px 14px}
+details.row summary::-webkit-details-marker{display:none}
+details.row summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin-left:4px;transition:transform .12s}
+details.row[open] summary::after{transform:rotate(-135deg)}
+.nm{font-family:var(--mono);font-weight:600;font-size:.95rem;overflow-wrap:anywhere}
+.wh{color:var(--muted);font-size:.95rem}
+.bs{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.b{font-size:.74rem;font-weight:600;border:1px solid var(--line);border-radius:999px;padding:1px 9px;white-space:nowrap;color:var(--muted)}
+.b.dg1{background:var(--warnbg);color:var(--warn);border-color:transparent}
+.b.dg2{background:var(--badbg);color:var(--bad);border-color:transparent}
+.b.ok{background:var(--okbg);color:var(--ok);border-color:transparent}
+.body{padding:2px 18px 16px 18px;border-top:1px solid var(--line)}
+.lab{font-weight:700;margin:16px 0 6px;font-size:.92rem}
+.body p{margin:4px 0;max-width:72ch}
+.cl{display:flex;align-items:center;gap:10px;background:var(--code);border-radius:8px;padding:7px 8px 7px 12px}
+.cl code{flex:1;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink)}
+.cp{border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:2px 10px;font-size:.78rem;font-weight:600;cursor:pointer;flex:none}
+.cp:hover{border-color:var(--accent)}
+.opts{display:grid;grid-template-columns:minmax(120px,max-content) minmax(0,1fr);gap:6px 18px;margin:0}
+.opts dt code{background:var(--code);padding:2px 6px;border-radius:5px;overflow-wrap:anywhere}
+.opts dd{margin:0;color:var(--ink)}
+.ex{margin:10px 0 14px}
+.ex p{color:var(--muted);margin:5px 2px 0}
+.rel{display:flex;flex-wrap:wrap;gap:6px}
+.rel a{font-family:var(--mono);font-size:.8rem;border:1px solid var(--line);border-radius:999px;padding:2px 10px;text-decoration:none;color:var(--accent)}
+.rel a:hover{background:var(--code)}
+.lrn{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-weight:600;cursor:pointer}
+.lrn input{width:18px;height:18px;accent-color:var(--accent)}
+.empty{background:var(--panel);border:1px dashed var(--line);border-radius:12px;padding:26px;margin-top:16px}
+.empty h2{margin:0 0 6px;font-size:1.1rem}
+.empty button{margin-top:10px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:7px 14px;font-weight:700;cursor:pointer}
+
+/* other views */
+.page{padding:30px 0 40px;max-width:900px}
+.page h1{font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.025em;line-height:1.1;margin:0 0 10px}
+.page .lede{color:var(--muted);font-size:1.05rem;max-width:64ch;margin:0 0 22px}
+.levels{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.lv{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.lv h2{margin:0;font-size:1.2rem;letter-spacing:-.01em;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.lv h2 small{font-size:.85rem;font-weight:500;color:var(--muted)}
+.lv p{margin:6px 0 10px;max-width:68ch}
+.weights{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin:0 0 20px}
+.weights h2{margin:0 0 8px;font-size:1.05rem}
+.wrow{display:grid;grid-template-columns:200px minmax(0,1fr) 44px;gap:10px;align-items:center;margin:5px 0;font-size:.92rem}
+.wbar{height:10px;border-radius:5px;background:var(--code);overflow:hidden}
+.wbar i{display:block;height:100%;background:var(--accent)}
+.note{color:var(--muted);font-size:.9rem;margin:8px 0 0}
+details.proj{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin:10px 0}
+details.proj summary{cursor:pointer;padding:14px 18px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-weight:700;font-size:1.05rem}
+details.proj summary .b{font-weight:600}
+details.proj .pb{padding:0 20px 16px}
+details.proj ol{padding-left:22px;margin:8px 0}
+details.proj li{margin:5px 0}
+.habit{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;list-style:none;padding:0;margin:0 0 26px;counter-reset:h}
+.habit li{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;counter-increment:h}
+.habit li::before{content:counter(h) ".";font-weight:800;color:var(--accent);margin-right:6px}
+.habit b{font-size:1.02rem}
+.habit p{margin:6px 0 0;color:var(--muted);font-size:.92rem}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{text-align:left;padding:11px 14px;vertical-align:top;border-bottom:1px solid var(--line);font-size:.93rem}
+th{font-size:.85rem;color:var(--muted);font-weight:700}
+tr:last-child td{border-bottom:0}
+td:first-child{white-space:nowrap}
+footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--muted);font-size:.9rem}
+footer ul{margin:6px 0 0;padding-left:20px}
+footer p{max-width:72ch;margin:0 0 8px}
+[hidden]{display:none!important}
+
+@media (max-width:860px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:16px}
+  .side{position:static;max-height:none;overflow:visible}
+  .cats{flex-direction:row;overflow-x:auto;padding-bottom:6px;gap:6px}
+  .cats button{flex:none;border:1px solid var(--line);background:var(--panel);border-radius:999px;white-space:nowrap}
+  .nav{margin-left:0;width:100%}
+  details.row summary{grid-template-columns:minmax(0,1fr) auto}
+  .wh{grid-column:1 / -1;order:3}
+  .bs{justify-content:flex-start;grid-column:1 / -1;order:4}
+  details.row summary::after{grid-column:2;grid-row:1}
+  .opts{grid-template-columns:minmax(0,1fr)}
+  .opts dd{margin-bottom:6px}
+  .wrow{grid-template-columns:130px minmax(0,1fr) 40px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#commands"><span class="cursor" aria-hidden="true"></span>Linux command guide</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#commands" data-nav="commands">Commands</a>
+      <a href="#path" data-nav="path">Learning path</a>
+      <a href="#projects" data-nav="projects">Practice projects</a>
+      <a href="#danger" data-nav="danger">Danger zone</a>
+    </nav>
+    <button class="theme" id="theme" type="button">Switch theme</button>
+  </header>
+</div>
+
+<main>
+<!-- COMMANDS VIEW -->
+<section id="view-commands">
+  <div class="wrap">
+    <div class="hero">
+      <h1>Linux commands, explained where you use them</h1>
+      <p class="lede">Search <span id="total">many</span> commands by name or by task. Every card gives the syntax, the options that matter, examples you can copy, and when to reach for the command in sysadmin, DevOps and security work.</p>
+      <div class="explain">
+        <h2>Take a command apart</h2>
+        <p class="hint">Pick an example, then select any piece to see what it does.</p>
+        <div class="samples" id="samples" role="group" aria-label="Example commands"></div>
+        <div class="toks" id="toks"></div>
+        <p class="say" id="say" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="shell">
+      <aside class="side" aria-label="Categories">
+        <div class="prog"><span id="progtxt"></span><progress id="progbar" value="0" max="1"></progress></div>
+        <div class="cats" id="cats" role="group" aria-label="Filter by category"></div>
+      </aside>
+      <div>
+        <label class="sr" for="q">Search commands</label>
+        <input id="q" class="search" type="search" placeholder="Search by command or task, like “find large files”" autocomplete="off" spellcheck="false">
+        <div class="filters">
+          <div class="fg" role="group" aria-label="Level"><span class="fl">Level</span>
+            <button type="button" data-f="lv" data-v="0" aria-pressed="true">All</button>
+            <button type="button" data-f="lv" data-v="1" aria-pressed="false">Beginner</button>
+            <button type="button" data-f="lv" data-v="2" aria-pressed="false">Intermediate</button>
+            <button type="button" data-f="lv" data-v="3" aria-pressed="false">Advanced</button>
+          </div>
+          <div class="fg" role="group" aria-label="Role"><span class="fl">Used by</span>
+            <button type="button" data-f="role" data-v="" aria-pressed="true">Everyone</button>
+            <button type="button" data-f="role" data-v="e" aria-pressed="false">Everyday users</button>
+            <button type="button" data-f="role" data-v="s" aria-pressed="false">Sysadmins</button>
+            <button type="button" data-f="role" data-v="d" aria-pressed="false">DevOps</button>
+            <button type="button" data-f="role" data-v="o" aria-pressed="false">SOC analysts</button>
+          </div>
+          <div class="fg" role="group" aria-label="Risk"><span class="fl">Risk</span>
+            <button type="button" data-f="dg" data-v="-1" aria-pressed="true">Any</button>
+            <button type="button" data-f="dg" data-v="0" aria-pressed="false">Safe</button>
+            <button type="button" data-f="dg" data-v="1" aria-pressed="false">Use with care</button>
+            <button type="button" data-f="dg" data-v="2" aria-pressed="false">Destructive</button>
+          </div>
+        </div>
+        <p class="count" id="count" aria-live="polite"></p>
+        <div id="list"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PATH VIEW -->
+<section id="view-path" hidden>
+  <div class="wrap page">
+    <h1>Learning path</h1>
+    <p class="lede">Work through six levels in order. Each level lists the commands to learn and one thing you should be able to do before moving on. Tick commands as learned on their cards and the counts here update.</p>
+    <div class="weights">
+      <h2>Where the weight goes for the LFCS sysadmin exam</h2>
+      <div id="weights"></div>
+      <p class="note">Weights are from the Linux Foundation’s 2023 exam update. Check the official LFCS page before you rely on them, because some third-party prep sites still show an older blueprint.</p>
+    </div>
+    <ol class="levels" id="levels"></ol>
+  </div>
+</section>
+
+<!-- PROJECTS VIEW -->
+<section id="view-projects" hidden>
+  <div class="wrap page">
+    <h1>Practice projects</h1>
+    <p class="lede">Nine hands-on exercises that turn commands into skills. Run them in a virtual machine or a container you can throw away, never on a production server.</p>
+    <div id="projects"></div>
+  </div>
+</section>
+
+<!-- DANGER VIEW -->
+<section id="view-danger" hidden>
+  <div class="wrap page">
+    <h1>Danger zone</h1>
+    <p class="lede">Linux does what you type, with no undo and often no confirmation. Build one habit and most of these disasters disappear.</p>
+    <ol class="habit">
+      <li><b>Preview</b><p>See what a command will touch first: <code>ls</code>, <code>find … -print</code>, <code>rsync --dry-run</code>, <code>lsblk</code>.</p></li>
+      <li><b>Back up</b><p>Copy the file or take a snapshot: <code>cp -a</code>, <code>sed -i.bak</code>, <code>crontab -l &gt; cron.bak</code>.</p></li>
+      <li><b>Act</b><p>Run the real command, with the narrowest scope you can: one folder, one file, one disk.</p></li>
+      <li><b>Verify</b><p>Check the result: <code>diff</code>, <code>sshd -t</code>, <code>systemctl status</code>, a second login session.</p></li>
+    </ol>
+    <div class="tw"><table>
+      <thead><tr><th>Command</th><th>What goes wrong</th><th>Safer habit</th></tr></thead>
+      <tbody id="dz"></tbody>
+    </table></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Only practise security commands such as <code>nmap</code>, <code>tcpdump</code> and <code>nc</code> on systems you own or have written permission to test.</p>
+    <p>Built from these references. Always confirm flags with <code>man</code> on your own system, because options differ between GNU, BSD and BusyBox.</p>
+    <ul>
+      <li><a href="https://www.gnu.org/software/coreutils/manual/coreutils.html" target="_blank" rel="noopener">GNU Coreutils manual</a></li>
+      <li><a href="https://man7.org/linux/man-pages/" target="_blank" rel="noopener">Linux man pages</a> and <a href="https://wiki.archlinux.org/" target="_blank" rel="noopener">ArchWiki</a></li>
+      <li><a href="https://www.redhat.com/sysadmin/" target="_blank" rel="noopener">Red Hat Enable Sysadmin</a> and <a href="https://help.ubuntu.com/community/UFW" target="_blank" rel="noopener">Ubuntu documentation</a></li>
+      <li><a href="https://linuxcommand.org/tlcl.php" target="_blank" rel="noopener">The Linux Command Line</a> by William Shotts</li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+/*DATA*/
+var D=[];
+function c(name,cat,lvl,dan,what,syntax,flags,ex,use,mist,rel,roles){
+  D.push({name:name,cat:cat,lvl:lvl,dan:dan,what:what,syntax:syntax,flags:flags,ex:ex,use:use,mist:mist,rel:rel?rel.split(' '):[],roles:roles.split(' ')});
+}
+var CATS=[
+ ['nav','Navigation and help'],['files','Files and folders'],['text','Reading and editing text'],['search','Searching and filtering'],
+ ['perms','Permissions and ownership'],['users','Users and groups'],['proc','Processes'],['monitor','System monitoring'],
+ ['disk','Disks and storage'],['net','Networking'],['pkg','Packages'],['archive','Archives and backup'],
+ ['systemd','Services (systemd)'],['logs','Logs'],['script','Shell and scripting'],['ssh','SSH and remote access'],
+ ['security','Security and SOC'],['cron','Scheduling']
+];
+
+/* ---------- navigation and help ---------- */
+c('pwd','nav',1,0,`Prints the full path of the folder you are in.`,`pwd [-P]`,[[`-P`,`Show the real path with symlinks resolved`]],[[`pwd`,`Prints something like /home/varun`]],`Check where you are before running anything that moves or deletes files.`,`Assuming you are in a different folder than you really are.`,`cd ls`,`e s d o`);
+c('cd','nav',1,0,`Changes the current folder.`,`cd [DIR]`,[[`cd -`,`Go back to the previous folder`],[`cd ~ (or just cd)`,`Go to your home folder`],[`cd ..`,`Go up one level`]],[[`cd /var/log`,`Jump to the system log folder`],[`cd "My Files"`,`Quote names that contain spaces`]],`Moving around a server that has no graphical file manager.`,`Forgetting quotes around folder names with spaces.`,`pwd ls`,`e s d o`);
+c('ls','nav',1,0,`Lists the files and folders in a directory.`,`ls [OPTIONS] [PATH...]`,[[`-l`,`Long format with permissions, owner, size and date`],[`-a`,`Include hidden files (names starting with a dot)`],[`-h`,`Human-readable sizes like 4.2M (use with -l)`],[`-t`,`Sort by modification time, newest first`],[`-R`,`List subfolders recursively`]],[[`ls -lah /etc`,`Show everything in /etc with readable sizes`],[`ls -lt | head`,`Show the ten most recently changed items`]],`The first step of almost every investigation: what is here, and who owns it?`,`Forgetting -a, which hides files like .ssh and .bashrc.`,`tree stat find`,`e s d o`);
+c('man','nav',1,0,`Opens the manual page for a command, file format or system call.`,`man [SECTION] NAME`,[[`-k WORD`,`Search page titles and descriptions`],[`5`,`Section 5 holds file formats such as crontab and passwd`],[`q`,`Quit the viewer`]],[[`man 5 crontab`,`Read how crontab files are written`],[`man -k firewall`,`Find manual pages related to firewalls`]],`Before using any flag you are unsure about. It is always installed and matches your system.`,`Missing the section: man 1 passwd is the command, man 5 passwd is the file.`,`type history`,`e s d o`);
+c('type','nav',1,0,`Shows what a name really runs: an alias, a shell builtin, a function or a program file.`,`type [-a] NAME`,[[`-a`,`Show every match, not just the first`]],[[`type -a ls`,`Reveals that ls may be an alias for ls --color=auto`],[`type cd`,`Shows that cd is a shell builtin, not a file`]],`When a command behaves differently than expected, or when two versions are installed.`,`Using which, which cannot see aliases and builtins.`,`alias man`,`e s d`);
+c('history','nav',1,0,`Shows the commands you typed earlier in this shell.`,`history [N]`,[[`!!`,`Repeat the last command`],[`!N`,`Repeat command number N`],[`Ctrl+R`,`Search your history as you type`]],[[`history | grep ssh`,`Find every ssh command you ran`],[`sudo !!`,`Re-run the last command with sudo`]],`Recalling long commands, and reviewing what happened in a session during an investigation.`,`Typing passwords on the command line. They end up in ~/.bash_history.`,`alias grep`,`e s d o`);
+c('alias','nav',1,0,`Creates a short name for a longer command.`,`alias NAME='COMMAND'`,[[`alias`,`With no arguments, lists current aliases`],[`unalias NAME`,`Removes an alias`]],[[`alias ll='ls -lah'`,`Typing ll now runs ls -lah`],[`alias rm='rm -I'`,`Adds a safety prompt before big deletions`]],`Saving keystrokes and adding safety nets to risky commands.`,`Aliases disappear when the shell closes. Put them in ~/.bashrc to keep them.`,`type source`,`e s d`);
+
+/* ---------- files and folders ---------- */
+c('touch','files',1,0,`Creates an empty file, or updates a file’s timestamp.`,`touch [-d DATE] FILE...`,[[`-d "2 days ago"`,`Set the timestamp to a specific time`],[`-c`,`Do not create the file if it is missing`]],[[`touch notes.txt`,`Create an empty file, or refresh its timestamp`],[`touch {a,b,c}.txt`,`Create three files in one command`]],`Creating placeholder files and testing scripts.`,`Expecting touch to change content. It only changes timestamps.`,`mkdir stat`,`e s d`);
+c('mkdir','files',1,0,`Creates folders.`,`mkdir [-p] DIR...`,[[`-p`,`Create parent folders as needed and do not fail if it already exists`],[`-m MODE`,`Set permissions at creation`]],[[`mkdir -p lab/{docs,scripts,logs}`,`Build a whole folder tree in one command`]],`Setting up project folders and backup locations.`,`Forgetting -p when the parent folder does not exist yet.`,`rmdir touch tree`,`e s d`);
+c('cp','files',1,0,`Copies files and folders.`,`cp [OPTIONS] SOURCE... DEST`,[[`-r`,`Copy folders recursively`],[`-a`,`Archive mode: keep permissions, times, owners and links`],[`-i`,`Ask before overwriting`],[`-v`,`Show what is copied`]],[[`cp -a /etc/nginx /root/nginx.bak`,`Back up a config folder exactly as it is`],[`cp -i report.txt report.old`,`Copy, asking before overwriting`]],`Backing up a config file before you edit it.`,`cp overwrites existing files silently unless you use -i or -n.`,`mv rsync`,`e s d`);
+c('mv','files',1,0,`Moves or renames files and folders.`,`mv [OPTIONS] SOURCE DEST`,[[`-i`,`Ask before overwriting`],[`-n`,`Never overwrite`],[`-v`,`Show what is moved`]],[[`mv app.log app.log.1`,`Rename a file`],[`mv *.csv ~/data/`,`Move every CSV file into a folder`]],`Renaming, organising and manual log rotation.`,`A typo in the destination can overwrite a file: mv a b replaces b if it exists.`,`cp rm`,`e s d`);
+c('rm','files',1,2,`Deletes files and folders. There is no trash can: deleted files are gone.`,`rm [OPTIONS] FILE...`,[[`-r`,`Remove folders and everything inside`],[`-f`,`Never ask, and ignore missing files`],[`-i`,`Ask before every removal`],[`-I`,`Ask once before removing more than three files or recursing`],[`--one-file-system`,`Do not cross into other mounted disks`]],[[`rm -I *.tmp`,`Delete temp files with one safety prompt`],[`rm -- -oddname`,`Delete a file whose name starts with a dash`]],`Cleaning up files you are certain you no longer need.`,`Running rm -rf "$DIR"/ when $DIR is empty. In scripts use "\${DIR:?}" so the script stops if it is empty.`,`rmdir find`,`e s d o`);
+c('rmdir','files',1,0,`Removes empty folders only.`,`rmdir [-p] DIR...`,[[`-p`,`Also remove empty parent folders`]],[[`rmdir old_logs`,`Fails safely if the folder still has files in it`]],`A safer alternative to rm -r when you expect a folder to be empty.`,`Expecting it to remove folders that still contain files.`,`rm mkdir`,`e s d`);
+c('ln','files',2,0,`Creates links between files. A symbolic link is a shortcut to another path.`,`ln [-s] TARGET LINKNAME`,[[`-s`,`Create a symbolic (soft) link instead of a hard link`],[`-f`,`Replace an existing link`]],[[`ln -s /opt/app/v2 /opt/app/current`,`Point “current” at version 2; switch versions by changing the link`]],`Deployments with switchable versions, and shortcuts to deep folders.`,`Mixing up the order. The target comes first, then the link name.`,`ls stat`,`s d`);
+c('stat','files',2,0,`Shows detailed information about a file: size, permissions, owner and timestamps.`,`stat [OPTIONS] FILE`,[[`-c FORMAT`,`Print only the fields you choose`]],[[`stat /etc/passwd`,`Shows size, inode, permissions, owner and the access, modify and change times`],[`stat -c '%a %U %n' *`,`Print octal permissions, owner and name for each file`]],`Investigations that depend on timestamps and exact permissions.`,`Treating ctime as creation time. It is the time the file’s metadata last changed.`,`ls file find`,`s d o`);
+c('file','files',1,0,`Detects a file’s type from its content, not its extension.`,`file FILE...`,[[`-i`,`Show the MIME type`],[`-b`,`Brief output without the file name`]],[[`file photo.jpg`,`Confirms whether it really is a JPEG`],[`file invoice.pdf`,`May reveal that it is actually an executable`]],`Triaging downloads and unknown files, because extensions can lie.`,`Trusting the extension. A file named .jpg can be anything.`,`stat sha256sum`,`e s o`);
+c('tree','files',1,0,`Draws a folder and its contents as a tree. It may need installing (apt install tree).`,`tree [-L DEPTH] [DIR]`,[[`-L N`,`Limit depth to N levels`],[`-a`,`Include hidden files`],[`-d`,`Show folders only`]],[[`tree -L 2 /etc/nginx`,`Show two levels of the nginx config folder`]],`Documenting a project layout or reviewing a repository.`,`Running it on / without -L, which prints everything.`,`ls find`,`e d`);
+
+/* ---------- reading and editing text ---------- */
+c('cat','text',1,0,`Prints files, or joins several files together.`,`cat [OPTIONS] FILE...`,[[`-n`,`Number every line`],[`-A`,`Show hidden characters such as tabs and line endings`]],[[`cat -A script.sh`,`Reveals Windows ^M line endings that break scripts`],[`cat a.txt b.txt > all.txt`,`Join two files into one`]],`Reading small files and joining files.`,`Using cat on a huge log. Use less or tail instead.`,`less head tail`,`e s d o`);
+c('less','text',1,0,`Lets you scroll through a file one screen at a time.`,`less [+F] FILE`,[[`/word`,`Search forward, then press n for the next match`],[`G / g`,`Jump to the end / the start`],[`F`,`Follow new lines like tail -f (Ctrl+C to stop)`],[`q`,`Quit`]],[[`less /var/log/syslog`,`Scroll a long log`],[`less +F /var/log/auth.log`,`Open a log and keep following it`]],`Reading large files without loading them all at once.`,`Trying to close less with Ctrl+C. Press q.`,`cat tail`,`e s d o`);
+c('tail','text',1,0,`Shows the last lines of a file, and can keep following it as it grows.`,`tail [-n N] [-f | -F] FILE`,[[`-n N`,`Show the last N lines`],[`-f`,`Keep printing new lines as they are added`],[`-F`,`Like -f, but keeps following after the log is rotated`]],[[`tail -f /var/log/messages | grep -i error`,`Watch a log live and show only errors`]],`Live log monitoring while you test or investigate.`,`Using -f on a log that gets rotated. -F follows the new file.`,`head less journalctl`,`e s d o`);
+c('head','text',1,0,`Shows the first lines of a file or of a command’s output.`,`head [-n N] FILE`,[[`-n N`,`Show the first N lines`],[`-n -N`,`Show everything except the last N lines`]],[[`head -n 5 data.csv`,`Preview the header and first rows`],[`ls -lt | head`,`Keep only the first ten lines of a result`]],`Previewing files and trimming long output.`,`Forgetting that head shows 10 lines by default.`,`tail cat`,`e s d o`);
+c('nano','text',1,0,`A friendly terminal text editor. Shortcuts are listed at the bottom of the screen.`,`nano FILE`,[[`Ctrl+O`,`Save (write out)`],[`Ctrl+X`,`Exit`],[`Ctrl+W`,`Search`]],[[`sudo nano /etc/hosts`,`Edit a root-owned file`]],`Quick config edits when you want something simple.`,`Editing a root-owned file without sudo, then failing to save.`,`vim diff`,`e s d`);
+c('vim','text',2,0,`A powerful terminal editor that is installed (as vi or vim) on almost every server.`,`vim FILE`,[[`i`,`Enter insert mode so you can type`],[`Esc`,`Return to normal mode`],[`:wq`,`Save and quit`],[`:q!`,`Quit without saving`],[`/word`,`Search`]],[[`sudo vim /etc/ssh/sshd_config`,`Edit the SSH server config`]],`Editing on servers where nothing else is installed.`,`Typing text while still in normal mode. Press i first.`,`nano diff`,`s d o`);
+c('wc','text',1,0,`Counts lines, words and bytes.`,`wc [-l | -w | -c] FILE`,[[`-l`,`Count lines`],[`-w`,`Count words`],[`-c`,`Count bytes`]],[[`wc -l /etc/passwd`,`How many accounts are listed`],[`ls | wc -l`,`Count the items in a folder`]],`Quick counts for logs, lists and search results.`,`Counting lines when you meant unique items. Pair with sort and uniq.`,`grep sort`,`e s d o`);
+c('diff','text',1,0,`Shows the differences between two files or folders.`,`diff [-u] OLD NEW`,[[`-u`,`Unified format, the easiest to read`],[`-r`,`Compare folders recursively`],[`-q`,`Only report whether files differ`]],[[`diff -u sshd_config.bak sshd_config`,`See exactly what you changed before reloading SSH`]],`Reviewing config changes and comparing a file with a known-good copy.`,`Swapping the order. Lines starting with - are in the first file, + in the second.`,`cp tee`,`s d o`);
+c('tee','text',2,0,`Sends output to the screen and to a file at the same time.`,`COMMAND | tee [-a] FILE`,[[`-a`,`Append instead of overwrite`]],[[`echo "PermitRootLogin no" | sudo tee -a /etc/ssh/sshd_config.d/10-hardening.conf`,`Write to a root-owned file from a pipe`],[`make 2>&1 | tee build.log`,`See the output and keep a copy`]],`Saving output while watching it, and writing to root-owned files.`,`Using sudo echo text > /etc/file. The redirect runs in your shell, not under sudo, so it fails.`,`cat sudo`,`s d`);
+
+/* ---------- searching and filtering ---------- */
+c('grep','search',1,0,`Searches text for a pattern and prints the matching lines.`,`grep [OPTIONS] PATTERN [FILE...]`,[[`-i`,`Ignore case`],[`-r`,`Search folders recursively`],[`-n`,`Show line numbers`],[`-v`,`Invert: show lines that do not match`],[`-c`,`Count matching lines`],[`-E`,`Use extended regular expressions`],[`-o`,`Print only the matching part`],[`-l`,`Print only the names of matching files`]],[[`grep -i error file.txt`,`Find error, ERROR or Error`],[`grep -rn "PermitRootLogin" /etc/ssh/`,`Find a setting across SSH config files, with line numbers`],[`grep -v '^#' /etc/ssh/sshd_config`,`Hide comment lines to see the active settings`]],`Searching logs, configs and code. The core of log analysis and threat hunting.`,`Forgetting quotes around patterns, so the shell expands * or spaces first.`,`find awk sed`,`e s d o`);
+c('find','search',2,1,`Searches the filesystem for files by name, type, size, age, owner or permissions.`,`find [PATH...] [TESTS] [ACTIONS]`,[[`-name / -iname`,`Match the file name (case-insensitive with -iname)`],[`-type f|d|l`,`File, directory or symlink`],[`-size +100M`,`Larger than 100 MB`],[`-mtime -7`,`Modified in the last 7 days`],[`-perm -4000`,`Has the SUID bit set`],[`-exec CMD {} +`,`Run a command on the results`],[`-delete`,`Delete matches (preview with -print first)`]],[[`find / -name "Foo.txt" 2>/dev/null`,`Search everywhere, hiding permission errors`],[`find /var/log -type f -size +100M`,`Find large log files`],[`find ~/Documents -name "*.txt" -exec grep -Hi penguin {} +`,`Search inside the files that were found`],[`find / -perm -4000 -type f 2>/dev/null`,`List SUID programs, a classic security audit`]],`Disk cleanup, building an incident timeline, and auditing permissions.`,`Putting -delete before the tests, which deletes everything. Run with -print first.`,`grep xargs locate`,`e s d o`);
+c('locate','search',1,0,`Finds files by name using a prebuilt database, so it is very fast.`,`locate [-i] PATTERN`,[[`-i`,`Ignore case`],[`-c`,`Only count matches`]],[[`sudo updatedb && locate nginx.conf`,`Refresh the database, then search instantly`]],`Quick lookups when you know part of a file name.`,`Trusting stale results. The database updates on a schedule, so new files may be missing.`,`find`,`e s d`);
+c('awk','search',2,0,`Processes text field by field. A staple for pulling columns out of logs and counting things.`,`awk [-F SEP] 'PATTERN { ACTION }' FILE`,[[`-F:`,`Use a colon as the field separator`],[`$1, $2, $NF`,`First, second and last field of each line`],[`NR`,`Current line number`]],[[`awk '{print $1}' access.log | sort | uniq -c | sort -nr | head`,`Top ten IP addresses in a web log`],[`awk -F: '$3==0 {print $1}' /etc/passwd`,`List accounts with UID 0 (should only be root)`]],`Log analysis and SOC triage.`,`Using double quotes around the program. The shell then mangles $1.`,`cut sort uniq`,`s d o`);
+c('sed','search',2,1,`Edits streams of text: substitute, delete or print selected lines.`,`sed [OPTIONS] 'COMMAND' FILE`,[[`s/old/new/g`,`Substitute every occurrence on each line`],[`-n and p`,`Print only the lines you select`],[`-i.bak`,`Edit in place and keep a .bak backup`],[`-E`,`Use extended regular expressions`]],[[`sed -n '10,20p' file`,`Print lines 10 to 20`],[`sed -i.bak 's/debug=true/debug=false/' app.conf`,`Change a setting and keep a backup`]],`Bulk edits to configs and quick text transformations in scripts.`,`On macOS and BSD, -i needs an argument (-i ''). GNU sed on Linux accepts plain -i or -i.bak.`,`grep awk diff`,`s d o`);
+c('cut','search',1,0,`Extracts columns from delimited text.`,`cut -d DELIM -f FIELDS FILE`,[[`-d`,`Field delimiter`],[`-f`,`Which fields to keep`],[`-c`,`Cut by character position`]],[[`cut -d: -f1 /etc/passwd`,`List all usernames`]],`Fast column extraction from simple delimited text.`,`Using cut on text with uneven spacing. awk handles that better.`,`awk sort`,`e s d o`);
+c('sort','search',1,0,`Sorts lines of text.`,`sort [OPTIONS] FILE`,[[`-n`,`Sort numerically`],[`-r`,`Reverse the order`],[`-k N`,`Sort by field N`],[`-u`,`Remove duplicate lines`],[`-h`,`Sort human sizes like 2K and 1G`]],[[`du -sh * | sort -h`,`Order folders by size`]],`Ordering results before counting or comparing them.`,`Sorting numbers without -n, so 10 comes before 2.`,`uniq awk`,`e s d o`);
+c('uniq','search',1,0,`Collapses or counts repeated lines. The input must be sorted first.`,`uniq [-c] [-d]`,[[`-c`,`Prefix each line with its count`],[`-d`,`Show only duplicated lines`]],[[`sort ips.txt | uniq -c | sort -nr`,`Count how often each address appears, most common first`]],`Frequency analysis, such as the most common failed-login sources.`,`Forgetting to sort first. Only adjacent duplicates are merged.`,`sort awk`,`e s d o`);
+c('xargs','search',2,0,`Turns a list of items into arguments for another command.`,`COMMAND | xargs [OPTIONS] CMD`,[[`-0`,`Read null-separated input (pair with find -print0)`],[`-n N`,`Pass N arguments per command`],[`-P N`,`Run N commands in parallel`]],[[`find . -name "*.log" -print0 | xargs -0 gzip`,`Compress many files, even when names contain spaces`]],`Batch operations on search results.`,`File names with spaces breaking into pieces. Use -print0 and -0.`,`find grep`,`s d o`);
+
+/* ---------- permissions and ownership ---------- */
+c('chmod','perms',1,1,`Changes who can read, write or run a file or folder.`,`chmod [OPTIONS] MODE FILE...`,[[`755 / 644 / 600`,`Numeric modes: r=4, w=2, x=1, for owner, group, others`],[`u+x, go-w, a=r`,`Symbolic: who (u g o a), then + - =, then r w x`],[`-R`,`Apply recursively`],[`X (capital)`,`Add execute only to folders and files that are already executable`]],[[`chmod 600 ~/.ssh/authorized_keys`,`Only you can read or write it`],[`chmod u+x deploy.sh`,`Make a script executable`],[`chmod -R u=rwX,go=rX /srv/data`,`Safe recursive fix: folders stay enterable, files do not become executable`]],`Fixing “permission denied”, and securing keys and web roots.`,`chmod -R 777 exposes everything. chmod -R 644 makes folders impossible to enter.`,`chown umask ls`,`e s d o`);
+c('chown','perms',2,1,`Changes the owner and group of files and folders.`,`chown [-R] USER[:GROUP] FILE...`,[[`-R`,`Apply recursively`],[`USER:GROUP`,`Set owner and group together`]],[[`sudo chown -R www-data:www-data /var/www/site`,`Give a web server ownership of its folder`]],`Web roots, service accounts, and files accidentally created by root.`,`A stray space or wrong path in a recursive chown on / can break the system.`,`chmod id`,`s d`);
+c('umask','perms',2,0,`Sets which permissions are removed from newly created files.`,`umask [MODE]`,[[`umask`,`Show the current mask`],[`-S`,`Show it in symbolic form`]],[[`umask 027`,`New files become 640 and new folders 750`]],`Hardening shells and services so new files are not world-readable.`,`Thinking umask adds permissions. It subtracts them from 666 (files) and 777 (folders).`,`chmod`,`s d o`);
+c('setfacl','perms',3,0,`Gives one user or group extra access beyond owner, group and others (ACLs). Use getfacl to view them.`,`setfacl -m u:USER:PERMS FILE`,[[`-m`,`Modify an ACL entry`],[`-x`,`Remove an entry`],[`-R`,`Apply recursively`],[`getfacl FILE`,`Show the current ACLs`]],[[`setfacl -m u:alice:rx /data`,`Let alice read and enter /data without changing its group`],[`getfacl /data`,`List all ACL entries`]],`Shared folders where owner and group rules are not enough.`,`Missing the + at the end of ls -l permissions, which signals that an ACL exists.`,`chmod chown`,`s d`);
+c('chattr','perms',3,1,`Sets low-level file attributes, such as making a file immutable.`,`chattr [+|-]ATTR FILE`,[[`+i`,`Immutable: cannot be changed, deleted or renamed, even by root`],[`-i`,`Remove the immutable flag`],[`lsattr FILE`,`Show attributes`]],[[`sudo chattr +i /etc/resolv.conf`,`Stop anything from rewriting this file`],[`lsattr /etc/resolv.conf`,`Check whether it is immutable`]],`Protecting critical files. Also check lsattr during incidents, because attackers sometimes protect their files this way.`,`Forgetting a file is immutable and wondering why even sudo rm fails.`,`chmod stat`,`s o`);
+
+/* ---------- users and groups ---------- */
+c('id','users',1,0,`Shows a user’s ID numbers and groups.`,`id [USER]`,[[`-u`,`Print only the user ID`],[`-Gn`,`Print group names`]],[[`id varun`,`Shows uid, gid and every group`]],`The first command after landing on a server: who am I and what can I do?`,`Assuming group changes apply instantly. Log out and back in.`,`sudo usermod`,`e s d o`);
+c('useradd','users',2,0,`Creates a user account. Debian also offers the friendlier adduser.`,`sudo useradd [OPTIONS] USER`,[[`-m`,`Create a home folder`],[`-s /bin/bash`,`Set the login shell`],[`-G sudo`,`Add to extra groups`]],[[`sudo useradd -m -s /bin/bash deploy`,`Create a user with a home folder and bash`],[`sudo passwd deploy`,`Then set their password`]],`Onboarding people and creating service accounts.`,`Forgetting -m, so no home folder is created.`,`usermod passwd userdel`,`s d`);
+c('usermod','users',2,1,`Changes an existing user account.`,`sudo usermod [OPTIONS] USER`,[[`-aG GROUP`,`Append to a supplementary group (always use -a with -G)`],[`-s SHELL`,`Change the login shell`],[`-L / -U`,`Lock / unlock the account`]],[[`sudo usermod -aG docker varun`,`Add varun to the docker group`],[`sudo usermod -L olduser`,`Lock an account without deleting it`]],`Granting access and disabling accounts.`,`Using -G without -a replaces all supplementary groups and can remove sudo access.`,`useradd id`,`s d o`);
+c('userdel','users',2,2,`Deletes a user account.`,`sudo userdel [-r] USER`,[[`-r`,`Also delete the home folder and mail spool`]],[[`sudo userdel -r olduser`,`Remove the account and its files`]],`Offboarding. Prefer locking the account first (usermod -L) and archiving the home folder.`,`Deleting a user whose files you still need. -r cannot be undone.`,`usermod`,`s`);
+c('passwd','users',1,0,`Changes a password, or locks and unlocks an account.`,`passwd [USER]`,[[`-l / -u`,`Lock / unlock an account (as root)`],[`-e`,`Force a password change at next login`],[`-S`,`Show password status`]],[[`passwd`,`Change your own password`],[`sudo passwd -S alice`,`Check whether alice’s password is set or locked`]],`Resetting passwords and locking accounts.`,`Assuming a locked password stops SSH key logins. It does not.`,`chage usermod`,`e s d`);
+c('chage','users',3,0,`Manages password ageing and account expiry.`,`sudo chage [OPTIONS] USER`,[[`-l`,`List ageing information`],[`-M DAYS`,`Maximum days between password changes`],[`-E DATE`,`Account expiry date`]],[[`sudo chage -l alice`,`Show alice’s password and expiry dates`],[`sudo chage -M 90 alice`,`Require a change every 90 days`]],`Enforcing password policy and temporary access.`,`Setting expiry on shared service accounts and breaking automation.`,`passwd`,`s o`);
+c('sudo','users',1,0,`Runs one command with another user’s privileges, usually root.`,`sudo [OPTIONS] COMMAND`,[[`-l`,`List what you are allowed to run`],[`-u USER`,`Run as another user`],[`-i`,`Start a root login shell`],[`visudo`,`The safe way to edit /etc/sudoers`]],[[`sudo -l`,`See your own sudo rights`],[`sudo systemctl restart nginx`,`Run one command as root`],[`sudo -u postgres psql`,`Run as the postgres user`]],`Doing admin tasks with least privilege instead of logging in as root.`,`Editing /etc/sudoers in a normal editor. A typo can lock everyone out, so use visudo.`,`id tee`,`e s d o`);
+c('last','users',2,0,`Shows login history. lastb shows failed logins.`,`last [OPTIONS]`,[[`-a`,`Show the host name last`],[`-n N`,`Show N entries`],[`lastb`,`Failed login attempts (needs root)`]],[[`last -a | head`,`Most recent logins and where they came from`],[`sudo lastb | head`,`Latest failed logins`]],`Investigating suspicious logins and reboot times.`,`Treating it as a complete record. Attackers can edit or clear these files.`,`journalctl ps`,`s o`);
+
+/* ---------- processes ---------- */
+c('ps','proc',1,0,`Shows a snapshot of running processes.`,`ps [OPTIONS]`,[[`aux`,`All processes with user, CPU and memory`],[`-ef --forest`,`Full format drawn as a parent and child tree`],[`-p PID -o cmd`,`Show the command line of one process`]],[[`ps aux --sort=-%mem | head`,`Top memory users`],[`ps -ef --forest`,`See which process started which`]],`Finding resource hogs and spotting odd parent chains, such as a web server starting a shell.`,`Grepping ps and matching the grep itself. Use pgrep instead.`,`top pgrep kill`,`e s d o`);
+c('top','proc',1,0,`Shows a live view of processes, CPU and memory. htop is a friendlier alternative if installed.`,`top`,[[`P`,`Sort by CPU`],[`M`,`Sort by memory`],[`k`,`Kill a process by PID`],[`q`,`Quit`]],[[`top -o %CPU`,`Start sorted by CPU use`]],`Seeing what is slowing a machine down right now.`,`Reading load average without knowing the number of CPUs.`,`ps uptime`,`e s d o`);
+c('pgrep','proc',2,0,`Finds process IDs by name.`,`pgrep [OPTIONS] PATTERN`,[[`-a`,`Show the full command line`],[`-u USER`,`Only that user’s processes`],[`-f`,`Match against the full command line`]],[[`pgrep -a nginx`,`List nginx processes and their commands`]],`Finding PIDs in scripts without parsing ps output.`,`Forgetting that patterns match substrings, so “ssh” also matches “sshd”.`,`ps kill`,`s d o`);
+c('kill','proc',2,1,`Sends a signal to a process, usually to stop it.`,`kill [-SIGNAL] PID...`,[[`-15 (TERM)`,`Ask the process to stop cleanly (the default)`],[`-9 (KILL)`,`Force it to stop. It cannot be caught.`],[`-HUP`,`Ask many daemons to reload their config`]],[[`kill 1234`,`Politely stop process 1234`],[`kill -HUP $(pgrep -o nginx)`,`Reload nginx’s oldest process`]],`Stopping hung programs and reloading daemons.`,`Reaching for -9 first. It skips cleanup and can leave corrupt or locked files.`,`pkill ps`,`s d o`);
+c('pkill','proc',2,1,`Sends a signal to processes matched by name.`,`pkill [OPTIONS] PATTERN`,[[`-u USER`,`Only that user’s processes`],[`-f`,`Match against the full command line`]],[[`pkill -u olduser`,`Stop everything a user is running`]],`Stopping groups of processes by name.`,`A broad pattern killing more than you intended. Preview with pgrep -a first.`,`pgrep kill`,`s d o`);
+c('nohup','proc',2,0,`Keeps a command running after you log out.`,`nohup COMMAND &`,[[`&`,`Run in the background`],[`jobs, fg, bg`,`List, foreground or resume background jobs`],[`Ctrl+Z`,`Pause the current program`]],[[`nohup ./long-task.sh > task.log 2>&1 &`,`Start a long job that survives disconnects`]],`Long tasks over SSH. For anything you want to reattach to, use tmux.`,`Forgetting to redirect output. It goes to nohup.out.`,`tmux`,`s d`);
+c('tmux','proc',2,0,`Keeps terminal sessions alive on a server so you can detach and reattach. May need installing.`,`tmux [new -s NAME | attach -t NAME]`,[[`Ctrl+b d`,`Detach and leave the session running`],[`Ctrl+b c`,`New window`],[`Ctrl+b %`,`Split the pane`],[`tmux ls`,`List sessions`]],[[`tmux new -s fix`,`Start a named session`],[`tmux attach -t fix`,`Come back after reconnecting`]],`Long jobs on remote servers that must survive a dropped connection.`,`Closing the terminal instead of detaching with Ctrl+b d.`,`nohup ssh`,`s d`);
+c('lsof','proc',3,0,`Lists open files and network sockets, and the processes that own them.`,`sudo lsof [OPTIONS]`,[[`-i :PORT`,`Who is using a network port`],[`-p PID`,`Files opened by a process`],[`+L1`,`Deleted files that are still held open`]],[[`sudo lsof -i :443`,`Which process owns port 443`],[`sudo lsof +L1`,`Find deleted files that still use disk space`]],`Port conflicts, “disk full but du disagrees”, and incident response.`,`Running without sudo and seeing only your own processes.`,`ss ps df`,`s d o`);
+
+/* ---------- system monitoring ---------- */
+c('uptime','monitor',1,0,`Shows how long the machine has been up and its load averages.`,`uptime [-p]`,[[`-p`,`Pretty format`],[`-s`,`Time since boot`]],[[`uptime`,`Shows time, users and load averages for 1, 5 and 15 minutes`]],`A first look at whether a machine is overloaded or rebooted recently.`,`Misreading load. A load of 4 is fine on 8 cores and bad on 2.`,`top free`,`e s d o`);
+c('free','monitor',1,0,`Shows memory and swap use.`,`free [-h]`,[[`-h`,`Human-readable sizes`],[`-s N`,`Repeat every N seconds`]],[[`free -h`,`Memory and swap. Watch the “available” column.`]],`Memory pressure and out-of-memory investigations.`,`Panicking about low “free”. Linux uses spare memory as cache, so look at “available”.`,`top vmstat`,`e s d o`);
+c('vmstat','monitor',3,0,`Reports CPU, memory and disk activity over time.`,`vmstat [DELAY] [COUNT]`,[[`wa`,`Percent of CPU time spent waiting on disk`],[`si / so`,`Swap in / swap out`]],[[`vmstat 1 5`,`Five one-second samples of CPU, memory and IO`]],`Telling whether a slowdown is CPU, memory or disk.`,`Reading the first line, which is an average since boot.`,`iostat free top`,`s d`);
+c('iostat','monitor',3,0,`Shows per-disk activity. Part of the sysstat package.`,`iostat -xz DELAY`,[[`-x`,`Extended statistics`],[`-z`,`Hide idle devices`],[`%util`,`Near 100 means the disk is saturated`]],[[`iostat -xz 1`,`Per-disk activity every second`]],`Diagnosing slow disks and busy database servers.`,`Forgetting that iostat is in the sysstat package.`,`vmstat df`,`s d`);
+c('uname','monitor',1,0,`Prints kernel and system information.`,`uname [-a | -r]`,[[`-r`,`Kernel release`],[`-a`,`Everything`]],[[`uname -r`,`Kernel version, for patch checks`],[`cat /etc/os-release`,`Distribution name and version`]],`Checking kernel and OS versions when planning patches or matching vulnerabilities.`,`Assuming uname shows the distribution. Use /etc/os-release for that.`,`dmesg`,`e s d o`);
+c('dmesg','monitor',2,0,`Shows messages from the kernel.`,`sudo dmesg [-T]`,[[`-T`,`Human-readable timestamps`],[`-l err,warn`,`Only errors and warnings`],[`-w`,`Follow new messages`]],[[`sudo dmesg -T | tail`,`Latest kernel messages`],[`sudo dmesg -l err,warn`,`Hardware and driver problems`]],`Hardware errors, USB devices appearing, and out-of-memory kills.`,`Assuming the buffer is permanent. It rolls over, so use journalctl -k for older entries.`,`journalctl lsblk`,`s d o`);
+c('watch','monitor',1,0,`Re-runs a command every few seconds and shows the result.`,`watch [-n SEC] COMMAND`,[[`-n N`,`Interval in seconds`],[`-d`,`Highlight changes`]],[[`watch -n 2 'ss -tn state established | wc -l'`,`Track the number of live connections`],[`watch -d df -h`,`Watch disk space change`]],`Simple live dashboards without installing anything.`,`Forgetting quotes around commands that contain pipes.`,`top free`,`e s d`);
+
+/* ---------- disks and storage ---------- */
+c('df','disk',1,0,`Shows free and used space on mounted filesystems.`,`df [-h] [-i] [PATH]`,[[`-h`,`Human-readable sizes`],[`-i`,`Show inodes instead of blocks`],[`-T`,`Show the filesystem type`]],[[`df -h /`,`How full the root disk is`],[`df -i`,`Inode use. Full inodes cause “disk full” errors even with space left.`]],`“No space left on device” is the classic trigger.`,`Ignoring inodes when space looks free.`,`du lsof`,`e s d o`);
+c('du','disk',1,0,`Shows how much space folders and files use.`,`du [OPTIONS] PATH`,[[`-s`,`One summary line per argument`],[`-h`,`Human-readable sizes`],[`-x`,`Stay on one filesystem`],[`--max-depth=N`,`Limit how deep it reports`]],[[`sudo du -xh --max-depth=1 / | sort -h`,`Find which top-level folder uses the most space`]],`Hunting what fills a disk.`,`Crossing into other mounts and getting confusing totals. Use -x.`,`df sort`,`e s d`);
+c('lsblk','disk',1,0,`Lists disks, partitions and where they are mounted.`,`lsblk [-f]`,[[`-f`,`Show filesystems, labels and UUIDs`],[`-o COLS`,`Choose the columns`]],[[`lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS,MODEL`,`Identify each disk by size and model`]],`Run it before and after plugging in a disk, and before any destructive disk command.`,`Guessing which device is the USB drive. Confirm by size and model.`,`dd fdisk blkid`,`e s d o`);
+c('blkid','disk',2,0,`Shows UUIDs and filesystem types of block devices.`,`sudo blkid [DEVICE]`,[[`-s UUID`,`Print only the UUID`]],[[`sudo blkid`,`UUIDs and filesystem types for every device`]],`Getting UUIDs for /etc/fstab, which are more stable than /dev/sdX names.`,`Using /dev/sdb1 in fstab. Device names can change between boots.`,`lsblk mount`,`s d`);
+c('mount','disk',2,1,`Attaches a filesystem to a folder.`,`sudo mount [-t TYPE] DEVICE DIR`,[[`-o ro`,`Mount read-only`],[`mount -a`,`Mount everything listed in /etc/fstab (a good test)`],[`findmnt`,`Show mounts as a tree`]],[[`sudo mount /dev/sdb1 /mnt`,`Attach a partition to /mnt`],[`sudo mount -a`,`Test fstab changes before you reboot`]],`Adding disks and mounting network shares.`,`A bad /etc/fstab line can stop the machine booting. Test with mount -a first.`,`umount blkid lsblk`,`s d`);
+c('umount','disk',2,0,`Detaches a mounted filesystem.`,`sudo umount DIR`,[[`-l`,`Lazy unmount when the target is busy`]],[[`sudo umount /mnt`,`Detach it safely`]],`Safely removing disks.`,`Getting “target is busy” and giving up. Find the culprit with lsof.`,`mount lsof`,`s d`);
+c('fdisk','disk',3,2,`Creates and edits disk partitions.`,`sudo fdisk [-l] [DEVICE]`,[[`-l`,`List partition tables`],[`m`,`Help inside the interactive prompt`],[`w`,`Write changes to disk (nothing is saved until then)`]],[[`sudo fdisk -l`,`List all disks and partitions`]],`Creating partitions on new disks.`,`Editing the wrong disk. Check lsblk first.`,`lsblk mkfs`,`s`);
+c('mkfs','disk',3,2,`Creates a filesystem, which erases everything on the target.`,`sudo mkfs.TYPE DEVICE`,[[`mkfs.ext4`,`Create an ext4 filesystem`],[`mkfs.xfs`,`Create an XFS filesystem`],[`-L LABEL`,`Set a label`]],[[`sudo mkfs.ext4 /dev/sdb1`,`Format a partition (erases everything on it)`]],`Preparing new storage.`,`Formatting a disk that holds data. It cannot be undone.`,`fdisk lsblk`,`s`);
+c('dd','disk',3,2,`Copies raw data between files and devices, block by block.`,`sudo dd if=INPUT of=OUTPUT [bs=SIZE] [status=progress]`,[[`if=`,`Input file or device`],[`of=`,`Output file or device`],[`bs=4M`,`Block size`],[`status=progress`,`Show progress`],[`conv=fsync`,`Flush data to disk before finishing`]],[[`sudo dd if=distro.iso of=/dev/sdX bs=4M status=progress conv=fsync`,`Write an ISO to a USB drive (replace sdX only after checking lsblk)`],[`sudo dd if=/dev/sda of=disk.img bs=4M status=progress`,`Image a disk for forensics`]],`Writing installers to USB drives and making raw disk images.`,`Swapping if and of, or picking the wrong disk, overwrites it with no warning or confirmation.`,`lsblk fdisk`,`s o`);
+c('fsck','disk',3,1,`Checks and repairs a filesystem.`,`sudo fsck [OPTIONS] DEVICE`,[[`-n`,`Check only, change nothing`],[`-f`,`Force a check even if marked clean`],[`-y`,`Answer yes to every repair prompt`]],[[`sudo fsck -n /dev/sdb1`,`See problems without fixing them`]],`Repairing a filesystem after a crash.`,`Running it on a mounted filesystem. Unmount first.`,`umount lsblk`,`s`);
+c('lvextend','disk',3,1,`Grows an LVM logical volume, and its filesystem, without downtime.`,`sudo lvextend -r -L +SIZE /dev/VG/LV`,[[`-L +10G`,`Grow by 10 GB`],[`-l +100%FREE`,`Use all free space in the volume group`],[`-r`,`Also resize the filesystem`]],[[`sudo lvextend -r -L +10G /dev/vg0/data`,`Add 10 GB and grow the filesystem online`],[`sudo vgs && sudo lvs`,`Check free space and volumes first`]],`Growing storage without downtime. A common sysadmin exam skill.`,`Extending the volume but forgetting to resize the filesystem. -r does both.`,`df lsblk`,`s d`);
+
+/* ---------- networking ---------- */
+c('ip','net',2,0,`Shows and configures network interfaces, addresses and routes. It replaces ifconfig and route.`,`ip [OPTIONS] OBJECT COMMAND`,[[`ip a`,`Show interfaces and IP addresses`],[`ip r`,`Show the routing table`],[`ip link set eth0 up`,`Bring an interface up`]],[[`ip a`,`Find your IP address`],[`ip r`,`Find your default gateway`]],`Network configuration and the first step of troubleshooting.`,`Expecting changes made with ip to survive a reboot. They do not.`,`ss ping`,`e s d o`);
+c('ss','net',2,0,`Shows network sockets and connections. It replaces netstat.`,`ss [OPTIONS]`,[[`-t / -u`,`TCP / UDP`],[`-l`,`Listening sockets`],[`-p`,`Show the owning process (needs sudo)`],[`-n`,`Numbers, not names`],[`state established`,`Filter by connection state`]],[[`sudo ss -tulpn`,`Everything that is listening, and which program owns it`],[`ss -tn state established`,`Current connections`]],`Answering “what is listening on this server?” and spotting backdoor listeners.`,`Using the older netstat, which is obsolete on modern systems.`,`lsof ip nmap`,`s d o`);
+c('ping','net',1,0,`Tests whether a host answers and how long it takes.`,`ping [-c COUNT] HOST`,[[`-c N`,`Send N packets then stop`],[`-i S`,`Seconds between packets`]],[[`ping -c 4 8.8.8.8`,`Test internet reachability without DNS`],[`ping -c 4 example.com`,`Test DNS and reachability together`]],`Step one of layered troubleshooting: gateway, then internet, then a name.`,`Treating a failed ping as proof that a host is down. Firewalls often block ICMP.`,`traceroute dig`,`e s d o`);
+c('traceroute','net',2,0,`Shows the path packets take to a destination.`,`traceroute [OPTIONS] HOST`,[[`-n`,`Skip DNS lookups`],[`tracepath`,`Similar, without root`],[`mtr -rw HOST`,`Combined ping and traceroute report`]],[[`traceroute -n example.com`,`Show every hop to the destination`]],`Finding where a connection slows down or stops.`,`Reading * * * as failure. Many routers simply do not answer.`,`ping`,`s d`);
+c('dig','net',2,0,`Looks up DNS records.`,`dig [@SERVER] NAME [TYPE]`,[[`+short`,`Print only the answer`],[`@1.1.1.1`,`Ask a specific DNS server`],[`MX / TXT / A`,`The record type`]],[[`dig +short example.com A`,`Just the IP address`],[`dig @1.1.1.1 example.com`,`Compare answers from a different resolver`]],`“It is always DNS”: checking what a name resolves to, and from where.`,`Testing only your local resolver and missing a split-DNS problem.`,`ping curl`,`s d o`);
+c('curl','net',2,0,`Makes web requests from the command line.`,`curl [OPTIONS] URL`,[[`-I`,`Fetch headers only`],[`-v`,`Verbose: show the whole conversation`],[`-L`,`Follow redirects`],[`-o FILE`,`Save to a file`],[`-X / -d`,`Choose the method / send data`]],[[`curl -I https://example.com`,`Check the status code and headers`],[`curl -s localhost:8080/health`,`Run a health check in a script`]],`Testing web servers and APIs, and downloading files.`,`Piping curl straight into sudo bash. Read scripts before you run them.`,`wget dig`,`e s d o`);
+c('wget','net',1,0,`Downloads files from the web.`,`wget [OPTIONS] URL`,[[`-O FILE`,`Choose the output name`],[`-c`,`Resume a partial download`],[`-r`,`Download recursively`]],[[`wget -c https://example.com/file.iso`,`Download, and resume if interrupted`]],`Reliable downloads, including large files.`,`Skipping checksum verification on downloaded files.`,`curl sha256sum`,`e s d`);
+c('nc','net',3,0,`Reads and writes data over network connections (netcat).`,`nc [OPTIONS] HOST PORT`,[[`-z`,`Scan without sending data`],[`-v`,`Verbose`],[`-l`,`Listen for connections`]],[[`nc -zv server 22`,`Check whether SSH is reachable`]],`Testing firewalls and ports. Attackers use it too, so unexpected nc processes deserve attention.`,`Mixing up netcat variants. Flags differ between them.`,`ss nmap`,`s d o`);
+c('tcpdump','net',3,1,`Captures and displays network packets.`,`sudo tcpdump [OPTIONS] [FILTER]`,[[`-i IFACE`,`Choose the interface`],[`-n`,`No name lookups`],[`-w FILE`,`Save packets to a file for Wireshark`],[`port 53`,`A capture filter`]],[[`sudo tcpdump -i eth0 port 53 -n`,`Watch DNS queries live`],[`sudo tcpdump -i eth0 -w capture.pcap`,`Save a capture to analyse in Wireshark`]],`Seeing what the network really carries during troubleshooting and incident response. Capture only where you are authorised, because traffic can contain passwords.`,`Capturing without a filter on a busy link and filling the disk.`,`ss nmap`,`s o`);
+c('nmap','net',3,1,`Scans hosts for open ports and services.`,`nmap [OPTIONS] TARGET`,[[`-sV`,`Detect service versions`],[`-p 1-1024`,`Choose ports`],[`-sn`,`Host discovery only`]],[[`nmap -sV 192.168.1.10`,`Scan one of your own hosts and identify its services`]],`Auditing the exposed services of your own network. Only scan systems you own or have written permission to test.`,`Scanning without authorisation, which can be illegal.`,`ss nc`,`s o`);
+
+/* ---------- packages ---------- */
+c('apt','pkg',1,0,`Installs, updates and removes software on Debian, Ubuntu and Kali.`,`sudo apt COMMAND`,[[`update`,`Refresh the package list`],[`upgrade`,`Install available updates`],[`install PKG`,`Install a package`],[`remove / purge`,`Remove (purge also deletes config files)`],[`search / show`,`Find and inspect packages`]],[[`sudo apt update && sudo apt upgrade`,`Refresh the list and apply updates`],[`apt show nginx`,`Read package details before installing`]],`Everyday software management on Debian-family systems.`,`Installing without running apt update first and getting an old version.`,`dpkg dnf`,`e s d o`);
+c('dpkg','pkg',2,0,`Queries and installs individual Debian packages.`,`dpkg [OPTIONS]`,[[`-l`,`List installed packages`],[`-L PKG`,`List the files a package installed`],[`-S /path`,`Which package owns a file`]],[[`dpkg -S /usr/bin/ssh`,`Find the package behind a file`],[`dpkg -L openssh-server`,`List its files`]],`Asking “where did this file come from?” on Debian systems.`,`Using dpkg -i on a package with missing dependencies. apt install ./file.deb resolves them.`,`apt`,`s d o`);
+c('dnf','pkg',1,0,`Installs, updates and removes software on RHEL, Rocky, Alma and Fedora.`,`sudo dnf COMMAND`,[[`install PKG`,`Install`],[`upgrade`,`Update everything`],[`search / info`,`Find and inspect packages`],[`history`,`See and undo transactions`]],[[`sudo dnf install httpd`,`Install the Apache web server`],[`dnf history`,`See what was installed, and when`]],`Everyday software management on Red Hat-family systems.`,`Mixing in manually downloaded rpm files that skip dependency checks.`,`rpm apt`,`e s d o`);
+c('rpm','pkg',2,0,`Queries and verifies packages on Red Hat-family systems.`,`rpm [OPTIONS]`,[[`-qa`,`List all installed packages`],[`-qf /path`,`Which package owns a file`],[`-Va`,`Verify installed files against the package database`]],[[`rpm -qf /usr/sbin/sshd`,`The package behind sshd`],[`sudo rpm -Va`,`Detect modified system files`]],`Package queries, and spotting tampered binaries.`,`Treating every -Va difference as an attack. Config files change legitimately.`,`dnf dpkg`,`s d o`);
+c('pacman','pkg',1,0,`Installs and removes software on Arch Linux and derivatives.`,`sudo pacman -S PKG`,[[`-S`,`Install`],[`-Syu`,`Sync and upgrade the whole system`],[`-Qo /path`,`Which package owns a file`],[`-R`,`Remove`]],[[`sudo pacman -Syu`,`Full system update`]],`Arch Linux administration.`,`Running -Sy without -u, which can leave a partial update.`,`apt`,`e s`);
+
+/* ---------- archives and backup ---------- */
+c('tar','archive',1,0,`Bundles files and folders into one archive, optionally compressed.`,`tar [OPTIONS] -f ARCHIVE [FILES]`,[[`-c`,`Create`],[`-x`,`Extract`],[`-t`,`List the contents`],[`-z / -j / -J`,`gzip / bzip2 / xz compression`],[`-f FILE`,`The archive file name`],[`-C DIR`,`Change to DIR first`]],[[`tar -czf backup.tar.gz dir/`,`Create a compressed archive`],[`tar -tzf backup.tar.gz`,`List the contents without extracting`],[`tar -xzf backup.tar.gz -C /restore`,`Extract into /restore (the folder must exist)`]],`Backups, moving folders, and unpacking downloads. List untrusted archives before extracting.`,`Extracting into the current folder and scattering files. Use -C, and check with -t first.`,`gzip rsync zip`,`e s d o`);
+c('gzip','archive',1,0,`Compresses single files.`,`gzip [-k] FILE`,[[`-k`,`Keep the original file`],[`-d`,`Decompress (same as gunzip)`],[`-9`,`Best compression`]],[[`gzip -k big.log`,`Compress but keep the original`],[`gunzip big.log.gz`,`Decompress`]],`Compressing logs. See also xz and zstd.`,`Forgetting that gzip replaces the original unless you use -k.`,`tar`,`e s d`);
+c('zip','archive',1,0,`Creates and extracts zip archives, which Windows and macOS users can open.`,`zip -r ARCHIVE.zip DIR  |  unzip ARCHIVE.zip`,[[`-r`,`Include folders`],[`unzip -l`,`List the contents`],[`unzip -d DIR`,`Extract into DIR`]],[[`zip -r site.zip public/`,`Create a zip of a folder`],[`unzip -l site.zip`,`See what is inside`]],`Sharing files with people on other operating systems.`,`Using zip for system backups. It does not keep Linux ownership and permissions. Use tar.`,`tar`,`e s`);
+c('rsync','archive',2,1,`Copies and synchronises files efficiently, locally or over SSH.`,`rsync [OPTIONS] SOURCE DEST`,[[`-a`,`Archive mode (keeps permissions, times, links)`],[`-v / -h`,`Verbose / human-readable`],[`-z`,`Compress during transfer`],[`--dry-run`,`Show what would happen`],[`--delete`,`Remove files in DEST that are not in SOURCE`]],[[`rsync -avh --dry-run src/ dest/`,`Preview a sync`],[`rsync -avz -e ssh dir/ user@host:/backup/`,`Back up to a remote server`]],`Backups and mirroring.`,`Forgetting that a trailing slash changes meaning: src/ copies the contents, src copies the folder itself. --delete without a dry run can wipe a backup.`,`cp tar ssh`,`s d`);
+
+/* ---------- services ---------- */
+c('systemctl','systemd',2,0,`Controls services and other units on systems that use systemd.`,`systemctl [OPTIONS] COMMAND [UNIT]`,[[`status`,`Show state and recent log lines`],[`start / stop / restart`,`Control a service now`],[`reload`,`Reload config without stopping`],[`enable --now`,`Start at boot and start immediately`],[`--failed`,`List failed units`],[`list-timers`,`Show scheduled timers`]],[[`systemctl status nginx`,`Is it running, and if not, why`],[`sudo systemctl enable --now nginx`,`Start it now and at every boot`],[`systemctl --failed`,`See what broke`]],`Managing every service. In investigations, list enabled units and timers to hunt for persistence.`,`Restarting when reload would do, causing needless downtime.`,`journalctl systemd-analyze`,`s d o`);
+c('systemd-analyze','systemd',3,0,`Shows what slows down boot.`,`systemd-analyze [blame | critical-chain]`,[[`blame`,`Units ordered by start-up time`],[`critical-chain`,`The chain of units that delayed boot`]],[[`systemd-analyze blame | head`,`The ten slowest units at boot`]],`Finding what makes a machine boot slowly.`,`Tuning units that are not on the critical chain.`,`systemctl`,`s d`);
+
+/* ---------- logs ---------- */
+c('journalctl','logs',2,0,`Reads the systemd journal, which holds logs for services, the kernel and boots.`,`journalctl [OPTIONS]`,[[`-u UNIT`,`Logs for one service`],[`-p err..alert`,`Only errors and worse`],[`--since "1 hour ago"`,`Time filter`],[`-b -1`,`Previous boot`],[`-f`,`Follow live`],[`--grep=PATTERN`,`Filter inside journalctl, faster than piping to grep`],[`-k`,`Kernel messages`]],[[`journalctl -u ssh --since "1 hour ago"`,`Recent SSH activity`],[`journalctl -p err -b`,`Errors since the last boot`],[`sudo journalctl --vacuum-size=100M`,`Trim the journal to 100 MB`]],`Service failures, boot problems and authentication events.`,`Checking only the current boot when the problem happened before a reboot.`,`systemctl dmesg`,`s d o`);
+c('logger','logs',2,0,`Writes a message into the system log.`,`logger [-t TAG] MESSAGE`,[[`-t TAG`,`Label the entry`],[`-p PRIORITY`,`Set facility and level`]],[[`logger -t backup "nightly job finished"`,`Write a line into the system log`]],`Letting scripts report to the same place as everything else.`,`Writing to a custom file that nobody monitors.`,`journalctl`,`s d`);
+c('ausearch','logs',3,0,`Searches the Linux audit log (auditd).`,`sudo ausearch [OPTIONS]`,[[`-k KEY`,`Search by rule key`],[`-m TYPE`,`Message type`],[`-ts today`,`Start time`]],[[`sudo ausearch -k passwd_watch -ts today`,`See who touched a watched file today`]],`Audit trails: who changed which file or ran what.`,`Expecting results without defining audit rules first. See auditctl.`,`auditctl journalctl`,`s o`);
+
+/* ---------- shell and scripting ---------- */
+c('set','script',2,0,`Changes shell behaviour. In scripts it makes failures stop the script.`,`set [OPTIONS]`,[[`-e`,`Exit when a command fails`],[`-u`,`Treat unset variables as errors`],[`-o pipefail`,`A pipeline fails if any part fails`]],[[`set -euo pipefail`,`The usual safety line at the top of a bash script`]],`Making scripts stop on errors instead of carrying on and causing damage.`,`Assuming -e catches everything. It has exceptions, such as commands inside if tests.`,`trap shellcheck`,`s d`);
+c('export','script',1,0,`Makes a variable available to programs you start.`,`export NAME=VALUE`,[[`export -p`,`List exported variables`],[`unset NAME`,`Remove a variable`]],[[`export EDITOR=vim`,`Make vim the default editor for child programs`],[`export PATH="$PATH:$HOME/bin"`,`Add a folder to the command search path`]],`Passing settings to programs you start.`,`Forgetting export. Plain variables are invisible to child processes.`,`source`,`e s d`);
+c('source','script',1,0,`Runs a file’s commands in the current shell.`,`source FILE   (or: . FILE)`,[[`.`,`Same as source in POSIX shells`]],[[`source ~/.bashrc`,`Apply changes to your shell without logging out`]],`Loading environment settings and shell functions.`,`Running ./file instead. That starts a child shell and the changes vanish.`,`export alias`,`e s d`);
+c('test','script',2,0,`Checks conditions in scripts: files, strings and numbers. Usually written as [[ ... ]].`,`[[ EXPRESSION ]]   or   test EXPRESSION`,[[`-f FILE`,`The file exists`],[`-d DIR`,`The directory exists`],[`-z / -n STR`,`String empty / not empty`],[`-eq -gt -lt`,`Numeric comparisons`]],[[`[[ -f /etc/hosts ]] && echo exists`,`Run something only if the file exists`],[`if [[ -z "$name" ]]; then echo "missing"; fi`,`Check for an empty value`]],`Conditions in scripts.`,`Forgetting the spaces inside the brackets, or using = for numbers.`,`set trap`,`s d`);
+c('trap','script',3,0,`Runs cleanup commands when a script exits or receives a signal.`,`trap 'COMMANDS' SIGNAL`,[[`EXIT`,`Runs when the script finishes`],[`INT`,`Runs on Ctrl+C`]],[[`trap 'rm -f "$tmp"' EXIT`,`Clean up a temp file however the script ends`]],`Removing temp files and locks in scripts.`,`Forgetting that a new trap replaces any earlier trap for the same signal.`,`set`,`s d`);
+c('shellcheck','script',2,0,`Finds bugs in shell scripts before you run them. May need installing.`,`shellcheck SCRIPT.sh`,[[`-x`,`Follow sourced files`],[`bash -n script.sh`,`Syntax check without running`]],[[`shellcheck backup.sh`,`Warns about unquoted variables and other common bugs`]],`Catching script bugs before they reach production.`,`Ignoring warnings about unquoted variables.`,`set test`,`s d`);
+
+/* ---------- SSH ---------- */
+c('ssh','ssh',2,0,`Opens a secure shell on a remote machine.`,`ssh [OPTIONS] [USER@]HOST`,[[`-i KEY`,`Choose a private key`],[`-p PORT`,`Connect to a non-default port`],[`-J HOST`,`Jump through a bastion host`],[`-L LOCAL:HOST:REMOTE`,`Forward a local port`],[`-v`,`Debug connection problems`]],[[`ssh -i ~/.ssh/id_ed25519 varun@server`,`Log in with a key`],[`ssh -J bastion user@internal`,`Reach an internal host through a jump host`],[`ssh -L 8080:localhost:80 user@host`,`Open a remote web page at localhost:8080`]],`Every remote administration task. Save shortcuts in ~/.ssh/config.`,`Ignoring host key warnings. A changed key can mean someone is intercepting the connection.`,`ssh-keygen scp sshd`,`s d o`);
+c('ssh-keygen','ssh',2,0,`Creates SSH key pairs.`,`ssh-keygen [-t TYPE]`,[[`-t ed25519`,`Modern key type`],[`-C COMMENT`,`Label the key`],[`-f FILE`,`Output file`]],[[`ssh-keygen -t ed25519 -C "varun@laptop"`,`Create a key pair, and use a passphrase`]],`Replacing passwords with key-based login.`,`Sharing the private key. Only the .pub file is ever shared.`,`ssh-copy-id ssh`,`s d`);
+c('ssh-copy-id','ssh',2,0,`Installs your public key on a server so you can log in with it.`,`ssh-copy-id [-i KEY] USER@HOST`,[[`-i FILE`,`Which public key to copy`]],[[`ssh-copy-id user@server`,`Install your public key on the server`]],`Turning on key-based login before you disable passwords.`,`Disabling password login before confirming the key works.`,`ssh-keygen sshd`,`s d`);
+c('scp','ssh',2,0,`Copies files over SSH.`,`scp [OPTIONS] SOURCE DEST`,[[`-r`,`Copy folders`],[`-P PORT`,`Port (capital P)`],[`-i KEY`,`Key file`]],[[`scp report.pdf user@host:/tmp/`,`Upload a file`],[`scp -r user@host:/var/log/app ./logs`,`Download a folder`]],`Quick one-off file copies. rsync is better for repeated syncs.`,`Using lowercase -p for the port. In scp that preserves times. The port is capital -P.`,`rsync ssh`,`s d`);
+c('sshd','ssh',3,1,`The SSH server. Its test options let you check changes safely.`,`sudo sshd -t   |   sudo sshd -T`,[[`-t`,`Test the config syntax`],[`-T`,`Print the effective config`]],[[`sudo sshd -t`,`Check for errors before reloading`],[`sudo sshd -T | grep -i permitrootlogin`,`See the value that is really applied`]],`Hardening SSH without locking yourself out. Set PermitRootLogin no and PasswordAuthentication no once keys work. Files in /etc/ssh/sshd_config.d/ can override your edits, because the first value wins.`,`Reloading SSH and closing your only session. Keep it open and test a second login first.`,`ssh systemctl`,`s d o`);
+
+/* ---------- security and SOC ---------- */
+c('ufw','security',2,1,`A simple firewall front end on Ubuntu.`,`sudo ufw COMMAND`,[[`default deny incoming`,`Block unsolicited traffic`],[`allow OpenSSH`,`Allow SSH`],[`limit 22/tcp`,`Rate-limit SSH attempts`],[`status numbered`,`List rules with numbers`],[`delete N`,`Remove rule number N`]],[[`sudo ufw allow OpenSSH && sudo ufw enable`,`Allow SSH first, then switch the firewall on`],[`sudo ufw status numbered`,`Review your rules`]],`Basic firewalling on Ubuntu servers.`,`Enabling the firewall over SSH before allowing SSH, which locks you out.`,`firewall-cmd iptables ss`,`s d o`);
+c('firewall-cmd','security',2,1,`Controls firewalld, the firewall on RHEL, Rocky and Alma.`,`sudo firewall-cmd [OPTIONS]`,[[`--list-all`,`Show active rules`],[`--permanent`,`Save across reboots`],[`--reload`,`Apply permanent rules`],[`--add-service=https`,`Open a service`]],[[`sudo firewall-cmd --permanent --add-service=https && sudo firewall-cmd --reload`,`Open HTTPS permanently`]],`Firewalling on Red Hat-family systems.`,`Forgetting --permanent, so rules vanish at reboot, or forgetting --reload.`,`ufw iptables`,`s d o`);
+c('iptables','security',3,1,`Reads and edits low-level firewall rules. nft is the newer backend.`,`sudo iptables [OPTIONS]`,[[`-L -n -v`,`List rules with counters`],[`-A / -D`,`Append / delete a rule`],[`-j DROP`,`Drop matching packets`]],[[`sudo iptables -L -n -v`,`Review current rules`]],`Reading existing firewall rules and doing low-level filtering.`,`Forgetting rules are lost at reboot unless saved, and a bad rule can cut off SSH.`,`ufw firewall-cmd`,`s o`);
+c('sha256sum','security',1,0,`Computes a fingerprint of a file, so you can verify it has not changed.`,`sha256sum FILE...`,[[`-c FILE`,`Check against a list of hashes`]],[[`sha256sum ubuntu.iso`,`Print the hash to compare with the official one`],[`sha256sum -c SHA256SUMS`,`Verify downloads in bulk`]],`Verifying downloads and detecting changed files.`,`Taking the hash from the same page that serves the file. Use a trusted source.`,`file wget`,`e s d o`);
+c('shred','security',3,2,`Overwrites a file before deleting it.`,`shred [OPTIONS] FILE`,[[`-u`,`Delete the file afterwards`],[`-n N`,`Overwrite N times`],[`-v`,`Show progress`]],[[`shred -vu secrets.txt`,`Overwrite and remove a file`]],`Making deleted data harder to recover on traditional disks.`,`Trusting it on SSDs, journaling or copy-on-write filesystems, where old copies may remain. Use full-disk encryption instead.`,`rm dd`,`s o`);
+c('getenforce','security',3,0,`Shows whether SELinux is enforcing access rules (Red Hat family).`,`getenforce`,[[`sestatus`,`Detailed SELinux status`],[`ls -Z`,`Show file labels`],[`restorecon -Rv PATH`,`Reset labels to policy defaults`],[`aa-status`,`The AppArmor equivalent`]],[[`getenforce`,`Prints Enforcing, Permissive or Disabled`],[`ls -Z /var/www`,`See SELinux labels on web files`]],`Explaining “permission denied” when normal permissions look right.`,`Switching SELinux off instead of fixing labels.`,`chmod systemctl`,`s o`);
+c('fail2ban-client','security',3,0,`Controls fail2ban, which bans addresses that fail logins repeatedly.`,`sudo fail2ban-client status [JAIL]`,[[`status`,`List jails`],[`status sshd`,`Show banned addresses`],[`set sshd unbanip IP`,`Unban an address`]],[[`sudo fail2ban-client status sshd`,`See currently banned addresses`]],`Reducing SSH brute-force noise.`,`Banning yourself with repeated wrong passwords. Whitelist your own address.`,`ufw journalctl`,`s o`);
+c('auditctl','security',3,0,`Adds rules to the Linux audit system.`,`sudo auditctl -w PATH -p PERMS -k KEY`,[[`-w PATH`,`Watch a file or folder`],[`-p wa`,`Watch writes and attribute changes`],[`-k KEY`,`Tag the events`],[`-l`,`List rules`]],[[`sudo auditctl -w /etc/passwd -p wa -k passwd_watch`,`Log changes to the password file`]],`Tracking who modifies sensitive files.`,`Forgetting that rules added this way are lost at reboot unless saved in /etc/audit/rules.d/.`,`ausearch`,`s o`);
+
+/* ---------- scheduling ---------- */
+c('crontab','cron',2,1,`Edits the list of jobs that run on a schedule.`,`crontab [-e | -l | -r]`,[[`-e`,`Edit your jobs`],[`-l`,`List your jobs`],[`-r`,`Remove all your jobs, with no confirmation`]],[[`*/5 * * * * /usr/local/bin/health.sh`,`Every five minutes`],[`0 2 * * * /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1`,`Daily at 02:00, keeping the output`],[`30 1 * * 1-5 /usr/local/bin/report.sh`,`01:30 on weekdays`]],`Scheduled backups, cleanups and reports. The fields are minute, hour, day of month, month, day of week, then the command.`,`Pressing -r when you meant -e. Save a copy first with crontab -l > cron.bak. Cron also has a minimal PATH, so use full paths.`,`at systemctl`,`s d o`);
+c('at','cron',2,0,`Schedules a command to run once.`,`at TIME`,[[`atq`,`List queued jobs`],[`atrm N`,`Cancel job N`]],[[`echo "/usr/local/bin/cleanup.sh" | at now + 10 minutes`,`Run once, ten minutes from now`]],`One-off tasks, such as a delayed restart.`,`Forgetting that the at service (atd) must be running.`,`crontab`,`s d`);
+
+/* ---------- other content ---------- */
+var LEVELS=[
+ ['Orientation','Find your way around and learn to read the manual.','pwd cd ls man type history alias','Navigate to any folder, list hidden files, and look up an unfamiliar flag in man.'],
+ ['Files and text','Create, copy, move, read and compare files safely.','touch mkdir cp mv rm rmdir ln stat file tree cat less head tail nano vim wc diff tee','Build a project folder tree, back up a config with cp -a, and read a long log with less and tail.'],
+ ['Power user','Chain commands, control access, manage processes and software.','grep find locate awk sed cut sort uniq xargs chmod chown umask setfacl id useradd usermod passwd sudo ps top kill pgrep pkill uname watch wget zip pacman userdel chage apt dpkg dnf rpm tar gzip rsync','Answer a question about a log with a pipeline of grep, awk, sort and uniq, and fix a broken permission tree.'],
+ ['Server admin','Keep a server healthy: disks, network, services, logs and remote access.','df du lsblk mount blkid uptime free vmstat dmesg ip ss ping dig curl systemctl journalctl ssh ssh-keygen ssh-copy-id scp sshd crontab iostat umount fdisk mkfs dd fsck lvextend traceroute nc systemd-analyze iptables','Diagnose a full disk, a stopped service and a DNS problem, then set up key-only SSH.'],
+ ['Security and SOC','Hunt for trouble and harden what you run.','lsof last tcpdump nmap ufw firewall-cmd sha256sum fail2ban-client auditctl ausearch getenforce chattr shred','Find a planted backdoor user, a rogue SUID file, a bad cron job and an unknown listener.'],
+ ['Automation','Turn what you do by hand into safe, repeatable scripts.','set export source test trap shellcheck logger at nohup tmux','Write a backup script that stops on error, logs its result and runs from cron.']
+];
+var WEIGHTS=[['Operations and deployment',25],['Networking',25],['Storage',20],['Essential commands',20],['Users and groups',10]];
+var PROJECTS=[
+ ['Workspace builder',1,'Build and back up a project folder tree.',['Create ~/lab/{docs,scripts,logs,backup} with one mkdir -p command.','Add a few files with touch and write text with echo and >>.','Copy the tree into backup with cp -a.','Draw it with tree and confirm both trees match with diff -r.'],'diff -r prints nothing when the folders are identical.'],
+ ['Permission puzzle',2,'Share a folder with one group and keep everyone else out.',['Create a group devs and a folder /srv/team.','Set the group with chown and mode 2770 with chmod, so new files inherit the group.','Try to enter the folder as a user who is not in devs and read the error.','Break the tree with chmod -R 644, then repair it with chmod -R u=rwX,g=rX,o=.'],'Members of devs can create files; others get “Permission denied”.'],
+ ['Log analyst',2,'Answer questions about a web server log using only pipelines.',['Get a sample access.log.','List the top ten IP addresses with awk, sort and uniq -c.','Count the 404 responses with grep -c.','Find the busiest hour by cutting out the timestamp field.'],'Your numbers match a second method, such as a short script.'],
+ ['Disk-full drill',3,'Find and fix a disk that is full but looks empty.',['Create a large file with dd or fallocate on a test filesystem.','Open it in one terminal with tail -f, then delete it in another.','Notice that df shows the space as still used.','Find the holder with lsof +L1, stop the process, and watch the space return.'],'df shows the space freed after the process ends.'],
+ ['Service doctor',3,'Break a web server on purpose, then diagnose it from the logs.',['Install nginx and confirm it runs with systemctl status.','Add a typo to its config and restart it.','Read the failure with journalctl -u nginx -p err and nginx -t.','Check what is listening with ss -tlnp, fix the typo and restart.'],'systemctl status shows active (running) and curl -I localhost returns 200.'],
+ ['Hardened server',3,'Lock down a fresh server without locking yourself out.',['Create a normal user with sudo rights and install your key with ssh-copy-id.','Put PermitRootLogin no and PasswordAuthentication no in a drop-in file under /etc/ssh/sshd_config.d/.','Verify with sshd -T, reload, and test a second login before closing the first.','Allow only SSH, HTTP and HTTPS with ufw, then add fail2ban for sshd.'],'Password logins fail, key logins work, and ufw status lists only your three rules.'],
+ ['Backup automation',4,'Write a backup that runs itself and reports its result.',['Write a script that starts with set -euo pipefail.','Archive /etc to a dated tar.gz and delete archives older than seven days.','Write a success or failure line with logger.','Run it from cron at 02:00 and check the result with journalctl.'],'A new archive appears each night and the log line is in the journal.'],
+ ['SOC hunt',4,'In a lab VM with planted problems, find all four using only built-in commands.',['Look for a user with UID 0 other than root using awk on /etc/passwd.','List SUID files with find and compare them with a clean machine.','Review crontab -l, /etc/cron.* and systemctl list-timers for odd jobs.','Check ss -tulpn for a listener you do not recognise, then trace it with lsof.'],'You can name the account, the file, the job and the port, and write a short incident note.'],
+ ['System report',4,'A script that prints a health and security report in Markdown.',['Collect uptime, df -h, free -h and failed units from systemctl --failed.','Add the count of failed logins from journalctl and the listening ports from ss.','Compare the SUID list with a saved baseline using diff.','Write everything to a dated report file.'],'Running the script twice produces two comparable reports.']
+];
+var LVN=['','Beginner','Intermediate','Advanced'];
+var DANGER=[
+ ['rm -rf','No trash can. An empty variable, as in rm -rf "$DIR"/, can point at the wrong place.','Use rm -I, ls the target first, use "\${DIR:?}" in scripts, and add --one-file-system.','rm'],
+ ['dd','A wrong of= overwrites a disk with no warning. Swapping if and of destroys the source.','Run lsblk before and after plugging in a drive and match by size and model. Unmount first.','dd'],
+ ['mkfs, fdisk','Erases or rewrites a disk.','Check lsblk and take a snapshot or backup first.','mkfs'],
+ ['chmod -R and chown -R','chmod -R 777 exposes everything. A stray space in a recursive chown on / breaks the system.','Use the capital X, split folders and files with find, and never use 777.','chmod'],
+ ['> file','A single > truncates a file instantly.','Use >> to append, or set -o noclobber in your shell.',''],
+ ['sed -i','Edits the file in place, so a wrong pattern damages it.','Use -i.bak, preview without -i first, and check with diff.','sed'],
+ ['kill -9','Skips cleanup and can corrupt data. A wrong PID can stop something critical.','Send TERM first and confirm the target with ps -p PID -o cmd.','kill'],
+ ['crontab -r','Deletes all your scheduled jobs without asking.','Save a copy with crontab -l > cron.bak before editing.','crontab'],
+ ['ufw enable and firewall rules','Turning the firewall on over SSH can lock you out.','Allow SSH first and keep a console or second session open.','ufw'],
+ ['sshd changes','A bad setting or a drop-in override can lock everyone out.','Run sshd -t, keep your session open and test a new login before closing it.','sshd'],
+ ['curl … | sudo bash','Runs code you have not read as root.','Download the script, read it, check its checksum, then run it.','curl'],
+ ['usermod -G (without -a)','Replaces all supplementary groups and can remove sudo access.','Always write usermod -aG.','usermod'],
+ ['shred','Does not reliably erase data on SSDs and journaling or copy-on-write filesystems.','Use full-disk encryption and destroy the key.','shred']
+];
+
+/*ENDDATA*/
+
+(function(){
+'use strict';
+var byName={};D.forEach(function(d){byName[d.name]=d;
+  d.hay=(d.name+' '+d.what+' '+d.syntax+' '+d.use+' '+d.mist+' '+d.flags.map(function(f){return f.join(' ')}).join(' ')+' '+d.ex.map(function(e){return e.join(' ')}).join(' ')).toLowerCase();});
+var CATN={};CATS.forEach(function(c){CATN[c[0]]=c[1]});
+var ROLEN={e:'Everyday users',s:'Sysadmins',d:'DevOps',o:'SOC analysts'};
+var DGN=['','Use with care','Destructive'];
+
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]})}
+var store={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+var learned=new Set();
+try{var sv=JSON.parse(store.get('lcg-learned')||'[]');if(Array.isArray(sv))sv.forEach(function(n){if(byName[n])learned.add(n)})}catch(e){}
+function saveLearned(){store.set('lcg-learned',JSON.stringify(Array.from(learned)))}
+
+var S={q:'',lv:0,role:'',dg:-1,cat:'',open:new Set()};
+
+$('#total').textContent='about '+(Math.floor(D.length/10)*10);
+
+/* ---------- theme ---------- */
+var root=document.documentElement;
+var savedTheme=store.get('lcg-theme');
+if(savedTheme==='light'||savedTheme==='dark')root.setAttribute('data-theme',savedTheme);
+function isDark(){var t=root.getAttribute('data-theme');if(t)return t==='dark';return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches}
+function themeLabel(){$('#theme').textContent=isDark()?'Switch to light':'Switch to dark'}
+$('#theme').addEventListener('click',function(){var n=isDark()?'light':'dark';root.setAttribute('data-theme',n);store.set('lcg-theme',n);themeLabel()});
+themeLabel();
+
+/* ---------- explainer ---------- */
+var SAMPLES=[
+ ['Find recent logs',[['find','Searches the filesystem. This is the command itself.','find'],['/var/log','Where to start looking.'],['-name "*.log"','Only names ending in .log. The quotes stop the shell expanding the star before find sees it.'],['-mtime -7','Only files modified in the last 7 days.']]],
+ ['See what is listening',[['sudo','Runs the next command as root, so process names are visible.','sudo'],['ss','Shows network sockets. It replaces the older netstat.','ss'],['-tulpn','Five flags in one: TCP, UDP, listening only, show the process, and show numbers instead of names.'],['|','The pipe sends the output of ss into the next command.'],['grep :22','Keeps only lines containing :22, the SSH port.','grep']]],
+ ['Back up a folder',[['tar','Bundles files into one archive.','tar'],['-czf','c creates an archive, z compresses it with gzip, and f says the archive name comes next.'],['backup.tar.gz','The name of the archive to create.'],['/etc','The folder to put inside it.']]],
+ ['Set permissions',[['chmod','Changes who can read, write or run a file.','chmod'],['640','Owner 6 is read and write (4+2). Group 4 is read only. Others 0 is nothing.'],['notes.txt','The file to change.']]]
+];
+var curSample=0,curTok=0;
+function renderSamples(){
+  $('#samples').innerHTML=SAMPLES.map(function(s,i){return '<button type="button" data-s="'+i+'" aria-pressed="'+(i===curSample)+'">'+esc(s[0])+'</button>'}).join('');
+  var toks=SAMPLES[curSample][1];
+  $('#toks').innerHTML=toks.map(function(t,i){return '<button type="button" class="tok t'+(i%4)+'" data-t="'+i+'" aria-pressed="'+(i===curTok)+'">'+esc(t[0])+'</button>'}).join('');
+  var t=toks[curTok];
+  var link=t[2]&&byName[t[2]]?' <a href="#cmd-'+t[2]+'">Open the '+esc(t[2])+' card</a>':'';
+  $('#say').innerHTML='<code>'+esc(t[0])+'</code> '+esc(t[1])+link;
+}
+$('#samples').addEventListener('click',function(e){var b=e.target.closest('button[data-s]');if(!b)return;curSample=+b.dataset.s;curTok=0;renderSamples()});
+$('#toks').addEventListener('click',function(e){var b=e.target.closest('button[data-t]');if(!b)return;curTok=+b.dataset.t;renderSamples();var nb=$('#toks button[data-t="'+curTok+'"]');if(nb)nb.focus()});
+renderSamples();
+
+/* ---------- filtering ---------- */
+function matches(d,skipCat){
+  if(S.lv&&d.lvl!==S.lv)return false;
+  if(S.role&&d.roles.indexOf(S.role)<0)return false;
+  if(S.dg>=0&&d.dan!==S.dg)return false;
+  if(!skipCat&&S.cat&&d.cat!==S.cat)return false;
+  if(S.q){var toks=S.q.toLowerCase().split(/\s+/).filter(Boolean);for(var i=0;i<toks.length;i++){if(d.hay.indexOf(toks[i])<0)return false}}
+  return true;
+}
+function rank(d){var q=S.q.toLowerCase().trim();if(!q)return 9;if(d.name===q)return 0;if(d.name.indexOf(q)===0)return 1;if(d.name.indexOf(q)>=0)return 2;return 3}
+function visible(){
+  var list=D.filter(function(d){return matches(d)});
+  if(S.q){list.sort(function(a,b){return rank(a)-rank(b)||a.name.localeCompare(b.name)})}
+  return list;
+}
+
+/* ---------- rendering ---------- */
+function codeLine(t){return '<div class="cl"><code>'+esc(t)+'</code><button type="button" class="cp" data-copy="'+esc(t)+'" aria-label="Copy command">Copy</button></div>'}
+function rowHTML(d){
+  var b='<span class="b">'+LVN[d.lvl]+'</span>';
+  if(d.dan)b+='<span class="b dg'+d.dan+'">'+DGN[d.dan]+'</span>';
+  b+='<span class="b ok" data-lb'+(learned.has(d.name)?'':' hidden')+'>Learned</span>';
+  var rel=d.rel.filter(function(n){return byName[n]}).map(function(n){return '<a href="#cmd-'+n+'">'+esc(n)+'</a>'}).join('');
+  var roles=d.roles.map(function(r){return ROLEN[r]}).join(', ');
+  return '<details class="row" id="cmd-'+d.name+'"'+(S.open.has(d.name)?' open':'')+' data-n="'+d.name+'">'+
+   '<summary><span class="nm">'+esc(d.name)+'</span><span class="wh">'+esc(d.what)+'</span><span class="bs">'+b+'</span></summary>'+
+   '<div class="body">'+
+   '<p class="lab">Syntax</p>'+codeLine(d.syntax)+
+   '<p class="lab">Options that matter</p><dl class="opts">'+d.flags.map(function(f){return '<dt><code>'+esc(f[0])+'</code></dt><dd>'+esc(f[1])+'</dd>'}).join('')+'</dl>'+
+   '<p class="lab">Examples</p>'+d.ex.map(function(e){return '<div class="ex">'+codeLine(e[0])+'<p>'+esc(e[1])+'</p></div>'}).join('')+
+   '<p class="lab">Where to use it</p><p>'+esc(d.use)+'</p>'+
+   '<p class="lab">Common mistake</p><p>'+esc(d.mist)+'</p>'+
+   (rel?'<p class="lab">Related commands</p><div class="rel">'+rel+'</div>':'')+
+   '<p class="note">Useful for: '+esc(roles)+'. Category: '+esc(CATN[d.cat])+'.</p>'+
+   '<label class="lrn"><input type="checkbox" data-learn="'+d.name+'"'+(learned.has(d.name)?' checked':'')+'> Mark as learned</label>'+
+   '</div></details>';
+}
+function renderList(){
+  var list=visible(),html='';
+  $('#count').textContent=list.length===D.length?('Showing all '+D.length+' commands'):('Showing '+list.length+' of '+D.length+' commands');
+  if(!list.length){
+    html='<div class="empty"><h2>No commands match</h2><p>Try fewer words, or search by task, for example “disk space” or “who logged in”.</p><button type="button" data-clear>Clear search and filters</button></div>';
+  }else if(S.q){
+    html='<div class="group">'+list.map(rowHTML).join('')+'</div>';
+  }else{
+    CATS.forEach(function(c){
+      var items=list.filter(function(d){return d.cat===c[0]});
+      if(items.length)html+='<section class="group"><h2>'+esc(c[1])+' <span>'+items.length+'</span></h2>'+items.map(rowHTML).join('')+'</section>';
+    });
+  }
+  $('#list').innerHTML=html;
+  renderCats();
+}
+function renderCats(){
+  var base=D.filter(function(d){return matches(d,true)});
+  var h='<button type="button" data-cat="" aria-pressed="'+(S.cat==='')+'"><span>All categories</span><span class="n">'+base.length+'</span></button>';
+  CATS.forEach(function(c){var n=base.filter(function(d){return d.cat===c[0]}).length;h+='<button type="button" data-cat="'+c[0]+'" aria-pressed="'+(S.cat===c[0])+'"><span>'+esc(c[1])+'</span><span class="n">'+n+'</span></button>'});
+  $('#cats').innerHTML=h;
+}
+function renderProgress(){
+  $('#progtxt').textContent=learned.size+' of '+D.length+' marked as learned';
+  $('#progbar').max=D.length;$('#progbar').value=learned.size;
+}
+function clearFilters(){
+  S.q='';S.lv=0;S.role='';S.dg=-1;S.cat='';$('#q').value='';
+  $$('[data-f]').forEach(function(b){var def={lv:'0',role:'',dg:'-1'}[b.dataset.f];b.setAttribute('aria-pressed',String(b.dataset.v===def))});
+}
+
+/* ---------- events ---------- */
+$('#q').addEventListener('input',function(e){S.q=e.target.value.trim();renderList()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='/'&&!/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)){e.preventDefault();location.hash='#commands';$('#q').focus()}
+});
+document.addEventListener('click',function(e){
+  var f=e.target.closest('[data-f]');
+  if(f){var k=f.dataset.f,v=f.dataset.v;S[k]=(k==='role')?v:parseInt(v,10);$$('[data-f="'+k+'"]').forEach(function(b){b.setAttribute('aria-pressed',String(b===f))});renderList();return}
+  var c=e.target.closest('[data-cat]');
+  if(c){S.cat=c.dataset.cat;renderList();var el=$('#cats button[aria-pressed="true"]');if(el)el.focus({preventScroll:true});return}
+  if(e.target.closest('[data-clear]')){clearFilters();renderList();return}
+  var cp=e.target.closest('[data-copy]');
+  if(cp){
+    var txt=cp.dataset.copy;
+    var done=function(){var o=cp.textContent;cp.textContent='Copied';setTimeout(function(){cp.textContent=o},1200)};
+    try{
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,function(){fallbackCopy(txt,done)})}else{fallbackCopy(txt,done)}
+    }catch(err){fallbackCopy(txt,done)}
+  }
+});
+function fallbackCopy(t,done){
+  try{var ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done()}catch(e){}
+}
+$('#list').addEventListener('toggle',function(e){
+  var d=e.target;if(!d||!d.dataset||!d.dataset.n)return;
+  if(d.open)S.open.add(d.dataset.n);else S.open.delete(d.dataset.n);
+},true);
+$('#list').addEventListener('change',function(e){
+  var cb=e.target.closest('[data-learn]');if(!cb)return;
+  var n=cb.dataset.learn;if(cb.checked)learned.add(n);else learned.delete(n);
+  saveLearned();renderProgress();
+  var row=cb.closest('details');var lb=row&&row.querySelector('[data-lb]');if(lb)lb.hidden=!cb.checked;
+});
+
+/* ---------- other views ---------- */
+function chips(names){return '<div class="rel">'+names.split(' ').filter(function(n){return byName[n]}).map(function(n){return '<a href="#cmd-'+n+'">'+esc(n)+'</a>'}).join('')+'</div>'}
+function renderPath(){
+  $('#weights').innerHTML=WEIGHTS.map(function(w){return '<div class="wrow"><span>'+esc(w[0])+'</span><span class="wbar"><i style="width:'+(w[1]*4)+'%"></i></span><span>'+w[1]+'%</span></div>'}).join('');
+  $('#levels').innerHTML=LEVELS.map(function(l,i){
+    var names=l[2].split(' ').filter(function(n){return byName[n]});
+    var done=names.filter(function(n){return learned.has(n)}).length;
+    return '<li class="lv"><h2>Level '+i+': '+esc(l[0])+' <small>'+done+' of '+names.length+' learned</small></h2><p>'+esc(l[1])+'</p>'+chips(l[2])+'<p class="note">You are ready to move on when you can: '+esc(l[3])+'</p></li>';
+  }).join('');
+}
+function renderProjects(){
+  $('#projects').innerHTML=PROJECTS.map(function(p){
+    return '<details class="proj"><summary>'+esc(p[0])+' <span class="b">'+LVN[Math.min(p[1],3)]+'</span><span class="wh" style="font-weight:400">'+esc(p[2])+'</span></summary><div class="pb"><ol>'+p[3].map(function(s){return '<li>'+esc(s)+'</li>'}).join('')+'</ol><p><b>How to check it worked:</b> '+esc(p[4])+'</p></div></details>';
+  }).join('');
+}
+function renderDanger(){
+  $('#dz').innerHTML=DANGER.map(function(r){
+    var nm=byName[r[3]]?'<a href="#cmd-'+r[3]+'"><code>'+esc(r[0])+'</code></a>':'<code>'+esc(r[0])+'</code>';
+    return '<tr><td>'+nm+'</td><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td></tr>';
+  }).join('');
+}
+
+/* ---------- routing ---------- */
+var VIEWS=['commands','path','projects','danger'];
+function route(){
+  var h=location.hash.slice(1),view='commands',cmd=null;
+  if(h.indexOf('cmd-')===0)cmd=h.slice(4);else if(VIEWS.indexOf(h)>=0)view=h;
+  VIEWS.forEach(function(v){$('#view-'+v).hidden=(v!==view)});
+  $$('[data-nav]').forEach(function(a){if(a.dataset.nav===view)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  if(view==='path')renderPath();
+  if(cmd&&byName[cmd]){
+    var d=byName[cmd];
+    if(visible().indexOf(d)<0){clearFilters()}
+    S.open.add(d.name);renderList();
+    var el=document.getElementById('cmd-'+d.name);
+    if(el){el.open=true;el.scrollIntoView({block:'start'});var sm=el.querySelector('summary');if(sm)sm.focus({preventScroll:true})}
+  }else if(!cmd){window.scrollTo(0,0)}
+}
+window.addEventListener('hashchange',route);
+
+renderList();renderProgress();renderProjects();renderDanger();route();
+})();
+</script>
+</body>
+</html>
